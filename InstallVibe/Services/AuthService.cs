@@ -1,25 +1,22 @@
 using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using InstallVibe.Data;
 using InstallVibe.Models;
-using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace InstallVibe.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly IDatabaseService _databaseService;
     private User? _currentUser;
 
     // PBKDF2 parameters
     private const int SaltSize = 32; // 256 bits
     private const int HashSize = 32; // 256 bits
     private const int Iterations = 100000; // OWASP recommended minimum
-
-    public AuthService(IDatabaseService databaseService)
-    {
-        _databaseService = databaseService;
-    }
 
     public async Task<User?> Login(string username, string password)
     {
@@ -28,27 +25,17 @@ public class AuthService : IAuthService
             return null;
         }
 
-        using var connection = new SqliteConnection(_databaseService.GetConnectionString());
-        await connection.OpenAsync();
+        using var scope = App.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<InstallVibeDbContext>();
 
-        var query = "SELECT Id, Username, PasswordHash, Role FROM Users WHERE Username = @username COLLATE NOCASE";
-        using var command = new SqliteCommand(query, connection);
-        command.Parameters.AddWithValue("@username", username);
+        // Find user by username (case-insensitive)
+        var user = await context.Users
+            .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
 
-        using var reader = await command.ExecuteReaderAsync();
-        if (await reader.ReadAsync())
+        if (user != null && VerifyPassword(password, user.PasswordHash))
         {
-            var id = reader.GetInt32(0);
-            var dbUsername = reader.GetString(1);
-            var passwordHash = reader.GetString(2);
-            var role = (UserRole)reader.GetInt32(3);
-
-            // Verify password using PBKDF2
-            if (VerifyPassword(password, passwordHash))
-            {
-                _currentUser = new User(id, dbUsername, passwordHash, role);
-                return _currentUser;
-            }
+            _currentUser = user;
+            return _currentUser;
         }
 
         return null;
@@ -67,36 +54,30 @@ public class AuthService : IAuthService
 
     public async Task SeedAdmin()
     {
-        using var connection = new SqliteConnection(_databaseService.GetConnectionString());
-        await connection.OpenAsync();
+        using var scope = App.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<InstallVibeDbContext>();
 
         // Check if admin user already exists
-        var checkQuery = "SELECT COUNT(*) FROM Users WHERE Username = @username COLLATE NOCASE";
-        using var checkCommand = new SqliteCommand(checkQuery, connection);
-        checkCommand.Parameters.AddWithValue("@username", "admin");
+        var adminExists = await context.Users
+            .AnyAsync(u => u.Username.ToLower() == "admin");
 
-        var count = (long)(await checkCommand.ExecuteScalarAsync() ?? 0L);
-
-        if (count > 0)
+        if (adminExists)
         {
-            // Admin already exists
             return;
         }
 
         // Create admin user with password "admin123"
         var passwordHash = HashPassword("admin123");
 
-        var insertQuery = @"
-            INSERT INTO Users (Username, PasswordHash, Role)
-            VALUES (@username, @passwordHash, @role)
-        ";
+        var adminUser = new User
+        {
+            Username = "admin",
+            PasswordHash = passwordHash,
+            Role = UserRole.Admin
+        };
 
-        using var insertCommand = new SqliteCommand(insertQuery, connection);
-        insertCommand.Parameters.AddWithValue("@username", "admin");
-        insertCommand.Parameters.AddWithValue("@passwordHash", passwordHash);
-        insertCommand.Parameters.AddWithValue("@role", (int)UserRole.Admin);
-
-        await insertCommand.ExecuteNonQueryAsync();
+        context.Users.Add(adminUser);
+        await context.SaveChangesAsync();
     }
 
     /// <summary>

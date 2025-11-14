@@ -128,75 +128,7 @@ public class InstallVibeDbContext : DbContext
 
     private void SeedData(ModelBuilder modelBuilder)
     {
-        // Seed admin user for EF Core database
-        // Note: The password hash here is for "admin123" using PBKDF2
-        // This matches the legacy auth database seeding
-        modelBuilder.Entity<User>().HasData(
-            new User
-            {
-                Id = 1,
-                Username = "admin",
-                PasswordHash = "placeholder", // Not used for auth - legacy DB is used
-                Role = UserRole.Admin
-            }
-        );
-
-        // Seed sample guide
-        modelBuilder.Entity<Guide>().HasData(
-            new Guide
-            {
-                Id = 1,
-                Title = "Standard HVAC Unit Installation",
-                Description = "Complete installation guide for residential HVAC units. Includes safety procedures, mounting instructions, and electrical connections.",
-                Category = "HVAC",
-                CreatedByUserId = 1, // Admin user
-                EstimatedDurationMinutes = 180
-            }
-        );
-
-        // Seed steps
-        modelBuilder.Entity<Step>().HasData(
-            new Step
-            {
-                Id = 1,
-                GuideId = 1,
-                StepNumber = 1,
-                Title = "Pre-installation Safety Check",
-                Instruction = "Before beginning installation, ensure all power to the installation area is shut off at the circuit breaker. Verify the power is off using a voltage tester. Wear appropriate PPE including safety glasses and work gloves.",
-                RequiredTools = "Voltage tester, Safety glasses, Work gloves",
-                SafetyNotes = "DANGER: Always verify power is off before working with electrical equipment. Lock out and tag the breaker box to prevent accidental power restoration."
-            },
-            new Step
-            {
-                Id = 2,
-                GuideId = 1,
-                StepNumber = 2,
-                Title = "Mounting the Unit",
-                Instruction = "Position the HVAC unit on the mounting bracket, ensuring it is level. Use a carpenter's level to verify both horizontal and vertical alignment. Secure the unit using the provided mounting bolts, tightening in a cross pattern to ensure even pressure.",
-                RequiredTools = "Carpenter's level, Socket wrench set, Mounting bolts (included)",
-                SafetyNotes = "Unit weighs 75+ lbs. Use proper lifting technique or get assistance. Ensure mounting bracket is rated for unit weight."
-            },
-            new Step
-            {
-                Id = 3,
-                GuideId = 1,
-                StepNumber = 3,
-                Title = "Electrical Connection",
-                Instruction = "Connect the electrical wiring according to the wiring diagram provided with the unit. Match wire colors: black to black (hot), white to white (neutral), and green/bare to ground. Use wire nuts to secure all connections. Install the electrical cover plate.",
-                RequiredTools = "Wire strippers, Screwdriver set, Wire nuts, Electrical tape",
-                SafetyNotes = "DANGER: Ensure power remains off during all electrical work. Double-check all connections before restoring power. If unsure, consult a licensed electrician."
-            }
-        );
-
-        // Seed media item
-        modelBuilder.Entity<MediaItem>().HasData(
-            new MediaItem
-            {
-                Id = 1,
-                StepId = 1,
-                MediaType = MediaType.Image,
-                FilePath = "/media/hvac/safety-check.jpg"
-            }
-        );
+        // Note: Seed data is now handled dynamically in App.xaml.cs
+        // after admin user is created to avoid foreign key constraint issues
     }
 }
