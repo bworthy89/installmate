@@ -128,8 +128,18 @@ public class InstallVibeDbContext : DbContext
 
     private void SeedData(ModelBuilder modelBuilder)
     {
-        // Seed admin user (if not exists - this will be handled by the existing auth seeding)
-        // We'll assume admin user with Id=1 exists
+        // Seed admin user for EF Core database
+        // Note: The password hash here is for "admin123" using PBKDF2
+        // This matches the legacy auth database seeding
+        modelBuilder.Entity<User>().HasData(
+            new User
+            {
+                Id = 1,
+                Username = "admin",
+                PasswordHash = "placeholder", // Not used for auth - legacy DB is used
+                Role = UserRole.Admin
+            }
+        );
 
         // Seed sample guide
         modelBuilder.Entity<Guide>().HasData(

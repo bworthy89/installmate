@@ -90,10 +90,13 @@ public partial class App : Application
         await databaseService.InitializeAsync();
         await authService.SeedAdmin();
 
-        // Initialize EF Core database and apply migrations
+        // Initialize EF Core database and ensure seed data exists
         using (var scope = Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<InstallVibeDbContext>();
+
+            // Delete and recreate database to ensure fresh seed data
+            await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
         }
     }
