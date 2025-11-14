@@ -28,6 +28,12 @@ public partial class HomeViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ViewGuides()
+    {
+        _navigationService.NavigateToGuideLibrary();
+    }
+
+    [RelayCommand]
     private async Task Logout()
     {
         await _authService.Logout();

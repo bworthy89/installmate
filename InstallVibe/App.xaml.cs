@@ -64,10 +64,16 @@ public partial class App : Application
         // ViewModels
         services.AddTransient<LoginViewModel>();
         services.AddTransient<HomeViewModel>();
+        services.AddTransient<GuideLibraryViewModel>();
+        services.AddTransient<GuideDetailViewModel>();
+        services.AddTransient<StepViewerViewModel>();
 
         // Views
         services.AddTransient<LoginView>();
         services.AddTransient<HomeView>();
+        services.AddTransient<GuideLibraryView>();
+        services.AddTransient<GuideDetailView>();
+        services.AddTransient<StepViewerView>();
 
         // Main Window
         services.AddSingleton<MainWindow>();

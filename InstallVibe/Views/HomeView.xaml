@@ -40,21 +40,33 @@
             <StackPanel
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Spacing="24">
+                Spacing="24"
+                MaxWidth="500">
 
                 <TextBlock
                     Text="{x:Bind ViewModel.WelcomeMessage, Mode=OneWay}"
                     FontSize="28"
                     FontWeight="SemiBold"
-                    HorizontalAlignment="Center" />
+                    HorizontalAlignment="Center"
+                    TextWrapping="Wrap"
+                    TextAlignment="Center" />
 
                 <TextBlock
-                    Text="Your dashboard is ready. Future features will appear here."
+                    Text="Manage and track installation guides for your team."
                     FontSize="16"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     HorizontalAlignment="Center"
                     TextWrapping="Wrap"
-                    MaxWidth="400" />
+                    TextAlignment="Center" />
+
+                <Button
+                    Content="View Installation Guides"
+                    Command="{x:Bind ViewModel.ViewGuidesCommand}"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Padding="32,12"
+                    FontSize="16"
+                    Margin="0,16,0,0" />
 
             </StackPanel>
         </Grid>
