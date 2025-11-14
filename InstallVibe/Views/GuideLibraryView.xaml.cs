@@ -13,7 +13,7 @@ public sealed partial class GuideLibraryView : Page
         DataContext = ViewModel;
         InitializeComponent();
 
-        // Load guides when view is created
-        _ = ViewModel.LoadGuidesAsync();
+        // Load guides when page is fully loaded
+        Loaded += async (s, e) => await ViewModel.LoadGuidesAsync();
     }
 }
