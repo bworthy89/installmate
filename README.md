@@ -7,6 +7,8 @@ A modern WinUI 3 desktop application built with .NET 7, MVVM pattern, and SQLite
 ```
 InstallVibe/
 ├── Models/              # Data models
+│   ├── User.cs          # User model
+│   └── UserRole.cs      # User role enum (Admin, Technician)
 ├── Views/               # XAML views (UI)
 │   ├── LoginView.xaml
 │   └── HomeView.xaml
@@ -15,7 +17,11 @@ InstallVibe/
 │   └── HomeViewModel.cs
 ├── Services/            # Business services
 │   ├── INavigationService.cs
-│   └── NavigationService.cs
+│   ├── NavigationService.cs
+│   ├── IDatabaseService.cs      # Database initialization
+│   ├── DatabaseService.cs
+│   ├── IAuthService.cs          # Authentication interface
+│   └── AuthService.cs           # PBKDF2 authentication
 ├── Converters/          # XAML value converters
 │   └── EmptyStringToVisibilityConverter.cs
 ├── App.xaml             # Application resources
@@ -57,44 +63,68 @@ InstallVibe/
 3. Press F5 to build and run
 4. Or use Build → Build Solution, then Debug → Start Debugging
 
-## Features (Step 1 - Scaffold)
+## Features
 
+### Step 1 - Project Scaffold ✅
 - ✅ WinUI 3 project structure
 - ✅ MVVM architecture with CommunityToolkit.Mvvm
 - ✅ Dependency injection using Microsoft.Extensions.DependencyInjection
 - ✅ Navigation service for view switching
-- ✅ LoginView with basic validation
-- ✅ HomeView placeholder dashboard
-- ✅ SQLite package ready for database integration
+- ✅ LoginView and HomeView
+- ✅ Unpackaged self-contained deployment
 
-## Acceptance Criteria - Step 1
+### Step 2 - Authentication & Role Model ✅
+- ✅ User model with Id, Username, PasswordHash, Role
+- ✅ UserRole enum (Admin, Technician)
+- ✅ SQLite database integration
+- ✅ PBKDF2 password hashing (100,000 iterations, SHA256)
+- ✅ Authentication service with Login, Logout, GetCurrentUser, SeedAdmin
+- ✅ Seeded admin account (username: `admin`, password: `admin123`)
+- ✅ Role-based navigation
+- ✅ Secure credential validation
 
-- [x] Full code compiles without errors
-- [x] Application launches and displays main window
-- [x] LoginView is displayed on startup
-- [x] Navigation service can switch between LoginView and HomeView
-- [x] Login button navigates to HomeView after entering credentials
-- [x] Logout button returns to LoginView
-- [x] Error message displays when credentials are empty
+## Database
+
+**Location:** `%LocalAppData%\InstallVibe\installvibe.db`
+
+**Schema:** See [STEP2_DATABASE_SCHEMA.md](STEP2_DATABASE_SCHEMA.md)
+
+### Default Credentials
+
+| Username | Password | Role |
+|----------|----------|------|
+| `admin` | `admin123` | Admin |
+
+⚠️ **Change the admin password in production!**
 
 ## Current Functionality
 
-1. **Login View:**
+1. **Authentication:**
+   - Secure login with PBKDF2 password hashing
+   - Auto-seeded admin account
+   - Case-insensitive username lookup
+   - Session management (current user tracking)
+
+2. **Login View:**
    - Username and password input fields
-   - Basic validation (non-empty fields required)
-   - Login button to navigate to Home
+   - Async authentication with loading state
+   - Error message display for invalid credentials
    - Placeholder Register button
 
-2. **Home View:**
-   - Welcome message
-   - Logout button to return to Login
+3. **Home View:**
+   - Personalized welcome message with username and role
+   - Logout functionality
    - Top navigation bar
+
+## Testing
+
+See [STEP2_TEST_SNIPPETS.md](STEP2_TEST_SNIPPETS.md) for authentication test examples and snippets.
 
 ## Next Steps
 
 Future steps will add:
-- User registration and authentication
-- SQLite database integration
+- User registration UI and workflow
+- User management (add/edit/delete technician accounts)
 - Application installation tracking
 - Installation management features
 - Settings and preferences
@@ -107,12 +137,22 @@ Future steps will add:
 - **Runtime:** .NET 7
 - **MVVM:** CommunityToolkit.Mvvm
 - **DI Container:** Microsoft.Extensions.DependencyInjection
-- **Database:** Microsoft.Data.Sqlite (ready for integration)
+- **Database:** SQLite (Microsoft.Data.Sqlite 7.0.10)
+- **Password Hashing:** PBKDF2 with SHA256
 - **Platform:** Windows App SDK 1.3
+- **Deployment:** Unpackaged, self-contained
+
+## Security Features
+
+- **PBKDF2 Password Hashing:** 100,000 iterations with SHA256 and 32-byte random salt
+- **Constant-Time Comparison:** Prevents timing attacks during password verification
+- **Parameterized Queries:** SQL injection protection
+- **Case-Insensitive Usernames:** Prevents duplicate accounts with different casing
 
 ## Notes
 
-- This is Step 1: Project scaffold with basic navigation
-- Authentication is placeholder only (accepts any non-empty credentials)
-- Database integration will be added in future steps
-- The application uses modern Windows design patterns
+- **Step 1 (Complete):** Project scaffold with MVVM and navigation
+- **Step 2 (Complete):** Authentication with SQLite database and PBKDF2 hashing
+- Database is automatically created on first run at `%LocalAppData%\InstallVibe\installvibe.db`
+- Admin account is automatically seeded with username `admin` and password `admin123`
+- The application uses modern Windows design patterns and unpackaged deployment

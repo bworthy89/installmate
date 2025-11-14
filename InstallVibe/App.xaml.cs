@@ -4,6 +4,7 @@ using InstallVibe.Services;
 using InstallVibe.ViewModels;
 using InstallVibe.Views;
 using System;
+using System.Threading.Tasks;
 
 namespace InstallVibe;
 
@@ -18,8 +19,11 @@ public partial class App : Application
         Services = ConfigureServices();
     }
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+        // Initialize database and seed admin user
+        await InitializeDatabaseAsync();
+
         MainWindow = Services.GetRequiredService<MainWindow>();
         MainWindow.Activate();
 
@@ -32,7 +36,11 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
-        // Services
+        // Database and Authentication Services
+        services.AddSingleton<IDatabaseService, DatabaseService>();
+        services.AddSingleton<IAuthService, AuthService>();
+
+        // Navigation Service
         services.AddSingleton<INavigationService, NavigationService>();
 
         // ViewModels
@@ -47,5 +55,17 @@ public partial class App : Application
         services.AddSingleton<MainWindow>();
 
         return services.BuildServiceProvider();
+    }
+
+    private static async Task InitializeDatabaseAsync()
+    {
+        var databaseService = Services.GetRequiredService<IDatabaseService>();
+        var authService = Services.GetRequiredService<IAuthService>();
+
+        // Initialize database schema
+        await databaseService.InitializeAsync();
+
+        // Seed admin user
+        await authService.SeedAdmin();
     }
 }
