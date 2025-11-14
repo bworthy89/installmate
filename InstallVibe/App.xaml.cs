@@ -43,11 +43,13 @@ public partial class App : Application
         var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         var appFolder = Path.Combine(appDataFolder, "InstallVibe");
         Directory.CreateDirectory(appFolder);
-        var dbPath = Path.Combine(appFolder, "installvibe.db");
 
-        // EF Core DbContext
+        // Separate database files for auth and guides
+        var guidesDbPath = Path.Combine(appFolder, "guides.db");
+
+        // EF Core DbContext for guides
         services.AddDbContext<InstallVibeDbContext>(options =>
-            options.UseSqlite($"Data Source={dbPath}"));
+            options.UseSqlite($"Data Source={guidesDbPath}"));
 
         // Legacy Database Service (for auth tables)
         services.AddSingleton<IDatabaseService, DatabaseService>();
