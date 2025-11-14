@@ -1,5 +1,6 @@
 using System;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Dispatching;
 
 // Note: No namespace - to avoid conflicts with WinUI 3 code generation
 class Program
@@ -11,7 +12,7 @@ class Program
         Application.Start((p) =>
         {
             var context = new DispatcherQueueSynchronizationContext(
-                Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
+                DispatcherQueue.GetForCurrentThread());
             System.Threading.SynchronizationContext.SetSynchronizationContext(context);
             new InstallVibe.App();
         });
