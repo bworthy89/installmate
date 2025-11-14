@@ -1,9 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Microsoft.EntityFrameworkCore;
+using InstallVibe.Data;
 using InstallVibe.Services;
 using InstallVibe.ViewModels;
 using InstallVibe.Views;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace InstallVibe;
@@ -21,7 +24,7 @@ public partial class App : Application
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
-        // Initialize database and seed admin user
+        // Initialize databases and seed data
         await InitializeDatabaseAsync();
 
         MainWindow = Services.GetRequiredService<MainWindow>();
@@ -36,9 +39,24 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
-        // Database and Authentication Services
+        // Get database path
+        var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var appFolder = Path.Combine(appDataFolder, "InstallVibe");
+        Directory.CreateDirectory(appFolder);
+        var dbPath = Path.Combine(appFolder, "installvibe.db");
+
+        // EF Core DbContext
+        services.AddDbContext<InstallVibeDbContext>(options =>
+            options.UseSqlite($"Data Source={dbPath}"));
+
+        // Legacy Database Service (for auth tables)
         services.AddSingleton<IDatabaseService, DatabaseService>();
+
+        // Authentication Services
         services.AddSingleton<IAuthService, AuthService>();
+
+        // Repository Services
+        services.AddScoped<IGuideRepository, GuideRepository>();
 
         // Navigation Service
         services.AddSingleton<INavigationService, NavigationService>();
@@ -59,13 +77,18 @@ public partial class App : Application
 
     private static async Task InitializeDatabaseAsync()
     {
+        // Initialize legacy auth database
         var databaseService = Services.GetRequiredService<IDatabaseService>();
         var authService = Services.GetRequiredService<IAuthService>();
 
-        // Initialize database schema
         await databaseService.InitializeAsync();
-
-        // Seed admin user
         await authService.SeedAdmin();
+
+        // Initialize EF Core database and apply migrations
+        using (var scope = Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<InstallVibeDbContext>();
+            await context.Database.EnsureCreatedAsync();
+        }
     }
 }
