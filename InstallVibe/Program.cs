@@ -1,10 +1,19 @@
+using System;
 using Microsoft.UI.Xaml;
 
-WinRT.ComWrappersSupport.InitializeComWrappers();
-Application.Start((p) =>
+// Note: No namespace - to avoid conflicts with WinUI 3 code generation
+class Program
 {
-    var context = new DispatcherQueueSynchronizationContext(
-        Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
-    System.Threading.SynchronizationContext.SetSynchronizationContext(context);
-    new InstallVibe.App();
-});
+    [STAThread]
+    static void Main(string[] args)
+    {
+        WinRT.ComWrappersSupport.InitializeComWrappers();
+        Application.Start((p) =>
+        {
+            var context = new DispatcherQueueSynchronizationContext(
+                Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
+            System.Threading.SynchronizationContext.SetSynchronizationContext(context);
+            new InstallVibe.App();
+        });
+    }
+}
