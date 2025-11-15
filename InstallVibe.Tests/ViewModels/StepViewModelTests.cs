@@ -1,114 +1,148 @@
 using Xunit;
-using Moq;
 using FluentAssertions;
 using InstallVibe.ViewModels;
 using InstallVibe.Models;
-using InstallVibe.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace InstallVibe.Tests.ViewModels;
 
 public class StepViewModelTests
 {
-    private readonly Mock<IGuideRepository> _mockGuideRepository;
-    private readonly Mock<IProgressService> _mockProgressService;
-    private readonly StepViewModel _viewModel;
-
-    public StepViewModelTests()
-    {
-        _mockGuideRepository = new Mock<IGuideRepository>();
-        _mockProgressService = new Mock<IProgressService>();
-        _viewModel = new StepViewModel(_mockGuideRepository.Object, _mockProgressService.Object);
-    }
-
     [Fact]
-    public async Task LoadStep_PopulatesStepData()
+    public void Constructor_InitializesViewModel()
     {
         // Arrange
-        var testStep = new Step
+        var step = new Step
         {
             Id = 1,
             StepNumber = 1,
             Title = "Test Step",
-            Description = "Test Description",
-            MediaUrls = new List<string> { "image1.png" }
+            Instruction = "Test instruction",
+            RequiredTools = "Wrench, Screwdriver",
+            SafetyNotes = "Wear safety goggles"
         };
-        _mockGuideRepository.Setup(x => x.GetStepAsync(1, 1)).ReturnsAsync(testStep);
 
         // Act
-        await _viewModel.LoadStepAsync(1, 1);
+        var viewModel = new StepViewModel(step, 0, false);
 
         // Assert
-        _viewModel.CurrentStep.Should().NotBeNull();
-        _viewModel.CurrentStep.Title.Should().Be("Test Step");
-        _viewModel.StepNumber.Should().Be(1);
+        viewModel.Id.Should().Be(1);
+        viewModel.StepNumber.Should().Be(1);
+        viewModel.Title.Should().Be("Test Step");
+        viewModel.Instruction.Should().Be("Test instruction");
+        viewModel.RequiredTools.Should().Be("Wrench, Screwdriver");
+        viewModel.SafetyNotes.Should().Be("Wear safety goggles");
+        viewModel.Index.Should().Be(0);
+        viewModel.IsCompleted.Should().BeFalse();
+        viewModel.IsSelected.Should().BeFalse();
     }
 
     [Fact]
-    public async Task MarkStepComplete_UpdatesProgress()
+    public void StepNumberText_ReturnsFormattedText()
     {
         // Arrange
-        var testStep = new Step { Id = 1, StepNumber = 1, Title = "Test", Description = "Test" };
-        _mockGuideRepository.Setup(x => x.GetStepAsync(1, 1)).ReturnsAsync(testStep);
-        await _viewModel.LoadStepAsync(1, 1);
+        var step = new Step { Id = 1, StepNumber = 5, Title = "Test", Instruction = "Test" };
+        var viewModel = new StepViewModel(step, 4, false);
 
         // Act
-        await _viewModel.MarkStepCompleteAsync();
+        var result = viewModel.StepNumberText;
 
         // Assert
-        _mockProgressService.Verify(x => x.MarkStepCompleteAsync(1, 1), Times.Once);
+        result.Should().Be("Step 5");
     }
 
     [Fact]
-    public async Task NavigateNext_AdvancesToNextStep()
+    public void CompletionIcon_ShowsCircle_WhenNotCompleted()
     {
         // Arrange
-        var step1 = new Step { Id = 1, StepNumber = 1, Title = "Step 1", Description = "Test" };
-        var step2 = new Step { Id = 2, StepNumber = 2, Title = "Step 2", Description = "Test" };
-        _mockGuideRepository.Setup(x => x.GetStepAsync(1, 1)).ReturnsAsync(step1);
-        _mockGuideRepository.Setup(x => x.GetStepAsync(1, 2)).ReturnsAsync(step2);
-        _mockGuideRepository.Setup(x => x.GetTotalStepsAsync(1)).ReturnsAsync(5);
-        await _viewModel.LoadStepAsync(1, 1);
+        var step = new Step { Id = 1, StepNumber = 1, Title = "Test", Instruction = "Test" };
+        var viewModel = new StepViewModel(step, 0, false);
 
         // Act
-        await _viewModel.NextStepCommand.ExecuteAsync(null);
+        var icon = viewModel.CompletionIcon;
 
         // Assert
-        _viewModel.StepNumber.Should().Be(2);
+        icon.Should().Be("\uE739"); // Circle
+        viewModel.IsCompleted.Should().BeFalse();
     }
 
     [Fact]
-    public async Task NavigatePrevious_GoesToPreviousStep()
+    public void CompletionIcon_ShowsCheckMark_WhenCompleted()
     {
         // Arrange
-        var step1 = new Step { Id = 1, StepNumber = 1, Title = "Step 1", Description = "Test" };
-        var step2 = new Step { Id = 2, StepNumber = 2, Title = "Step 2", Description = "Test" };
-        _mockGuideRepository.Setup(x => x.GetStepAsync(1, 1)).ReturnsAsync(step1);
-        _mockGuideRepository.Setup(x => x.GetStepAsync(1, 2)).ReturnsAsync(step2);
-        await _viewModel.LoadStepAsync(1, 2);
+        var step = new Step { Id = 1, StepNumber = 1, Title = "Test", Instruction = "Test" };
+        var viewModel = new StepViewModel(step, 0, true);
 
         // Act
-        await _viewModel.PreviousStepCommand.ExecuteAsync(null);
+        var icon = viewModel.CompletionIcon;
 
         // Assert
-        _viewModel.StepNumber.Should().Be(1);
+        icon.Should().Be("\uE73E"); // CheckMark
+        viewModel.IsCompleted.Should().BeTrue();
     }
 
-    [Theory]
-    [InlineData(1, 5, true, false)]  // First step: can go next, can't go previous
-    [InlineData(3, 5, true, true)]   // Middle step: can go both
-    [InlineData(5, 5, false, true)]  // Last step: can't go next, can go previous
-    public async Task NavigationCommands_HaveCorrectCanExecute(int currentStep, int totalSteps, bool canNext, bool canPrevious)
+    [Fact]
+    public void IsCompleted_CanBeChanged()
     {
         // Arrange
-        var step = new Step { Id = currentStep, StepNumber = currentStep, Title = "Test", Description = "Test" };
-        _mockGuideRepository.Setup(x => x.GetStepAsync(1, currentStep)).ReturnsAsync(step);
-        _mockGuideRepository.Setup(x => x.GetTotalStepsAsync(1)).ReturnsAsync(totalSteps);
-        await _viewModel.LoadStepAsync(1, currentStep);
+        var step = new Step { Id = 1, StepNumber = 1, Title = "Test", Instruction = "Test" };
+        var viewModel = new StepViewModel(step, 0, false);
 
-        // Act & Assert
-        _viewModel.NextStepCommand.CanExecute(null).Should().Be(canNext);
-        _viewModel.PreviousStepCommand.CanExecute(null).Should().Be(canPrevious);
+        // Act
+        viewModel.IsCompleted = true;
+
+        // Assert
+        viewModel.IsCompleted.Should().BeTrue();
+        viewModel.CompletionIcon.Should().Be("\uE73E"); // CheckMark
+    }
+
+    [Fact]
+    public void IsCompleted_PropertyChange_UpdatesCompletionIcon()
+    {
+        // Arrange
+        var step = new Step { Id = 1, StepNumber = 1, Title = "Test", Instruction = "Test" };
+        var viewModel = new StepViewModel(step, 0, false);
+        var propertyChangedEvents = new System.Collections.Generic.List<string>();
+        viewModel.PropertyChanged += (s, e) => propertyChangedEvents.Add(e.PropertyName!);
+
+        // Act
+        viewModel.IsCompleted = true;
+
+        // Assert
+        propertyChangedEvents.Should().Contain("IsCompleted");
+        propertyChangedEvents.Should().Contain("CompletionIcon");
+    }
+
+    [Fact]
+    public void IsSelected_CanBeChanged()
+    {
+        // Arrange
+        var step = new Step { Id = 1, StepNumber = 1, Title = "Test", Instruction = "Test" };
+        var viewModel = new StepViewModel(step, 0, false);
+
+        // Act
+        viewModel.IsSelected = true;
+
+        // Assert
+        viewModel.IsSelected.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Step_ReturnsUnderlyingStepModel()
+    {
+        // Arrange
+        var step = new Step
+        {
+            Id = 1,
+            StepNumber = 1,
+            Title = "Test Step",
+            Instruction = "Test instruction"
+        };
+        var viewModel = new StepViewModel(step, 0, false);
+
+        // Act
+        var result = viewModel.Step;
+
+        // Assert
+        result.Should().BeSameAs(step);
     }
 }
