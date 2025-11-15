@@ -27,8 +27,9 @@ public class NetworkServiceTests
         // Act
         var result = await _networkService.IsConnectedAsync();
 
-        // Assert
-        result.Should().Match(x => x == true || x == false);
+        // Assert - just verify it returns without throwing
+        // The result is a bool, so we can test it returned successfully
+        (result == true || result == false).Should().BeTrue();
     }
 
     [Fact]
@@ -38,7 +39,7 @@ public class NetworkServiceTests
         var isConnected = _networkService.IsConnected;
 
         // Assert
-        isConnected.Should().Match(x => x == true || x == false);
+        (isConnected == true || isConnected == false).Should().BeTrue();
     }
 
     [Fact]
@@ -47,8 +48,8 @@ public class NetworkServiceTests
         // Act
         var connectionType = _networkService.GetConnectionType();
 
-        // Assert
-        connectionType.Should().BeAssignableTo<NetworkConnectionType>();
+        // Assert - verify it's a valid enum value
+        System.Enum.IsDefined(typeof(NetworkConnectionType), connectionType).Should().BeTrue();
     }
 
     [Fact]
@@ -81,6 +82,6 @@ public class NetworkServiceTests
         var result = await _networkService.IsHostReachableAsync("localhost");
 
         // Assert
-        result.Should().Match(x => x == true || x == false);
+        (result == true || result == false).Should().BeTrue();
     }
 }
