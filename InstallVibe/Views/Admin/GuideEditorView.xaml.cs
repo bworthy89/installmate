@@ -22,10 +22,7 @@ public sealed partial class GuideEditorView : Page
         Loaded += async (s, e) =>
         {
             var parameters = _navigationService.GetNavigationParameters(typeof(GuideEditorView));
-            if (parameters != null)
-            {
-                await ViewModel.InitializeAsync(parameters);
-            }
+            await ViewModel.InitializeAsync(parameters);
         };
     }
 
