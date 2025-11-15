@@ -83,17 +83,18 @@
 
                     <Border Style="{StaticResource FlatCardStyle}">
                         <StackPanel Spacing="12">
-                            <ToggleSwitch
-                                IsOn="{x:Bind ViewModel.TelemetryEnabled, Mode=TwoWay}"
-                                Header="Send diagnostic data"
-                                OnContent="Enabled"
-                                OffContent="Disabled">
-                                <ToggleSwitch.Description>
-                                    <TextBlock TextWrapping="Wrap">
-                                        Help improve InstallVibe by sending anonymous usage data and crash reports
-                                    </TextBlock>
-                                </ToggleSwitch.Description>
-                            </ToggleSwitch>
+                            <StackPanel Spacing="4">
+                                <ToggleSwitch
+                                    IsOn="{x:Bind ViewModel.TelemetryEnabled, Mode=TwoWay}"
+                                    Header="Send diagnostic data"
+                                    OnContent="Enabled"
+                                    OffContent="Disabled" />
+                                <TextBlock
+                                    Text="Help improve InstallVibe by sending anonymous usage data and crash reports"
+                                    TextWrapping="Wrap"
+                                    Style="{StaticResource CaptionTextStyle}"
+                                    Margin="0,0,0,0" />
+                            </StackPanel>
                         </StackPanel>
                     </Border>
                 </StackPanel>
