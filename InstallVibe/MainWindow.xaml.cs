@@ -105,8 +105,11 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         // Update admin menu visibility (in case user just logged in/out)
         UpdateAdminVisibility();
 
-        // Update selected navigation item
-        UpdateNavigationSelection();
+        // Update selected navigation item - dispatch to UI thread to avoid COM exceptions
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            UpdateNavigationSelection();
+        });
     }
 
     private void UpdateNavigationSelection()
@@ -115,44 +118,50 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         {
             var currentPage = ContentFrame.Content?.GetType().Name;
 
-            // First, deselect all menu items
+            // Handle settings selection
+            if (currentPage == "SettingsView")
+            {
+                if (NavView.SelectedItem != NavView.SettingsItem)
+                {
+                    NavView.SelectedItem = NavView.SettingsItem;
+                }
+                return;
+            }
+
+            // Find and select the appropriate menu item
+            object? itemToSelect = null;
+
             foreach (var item in NavView.MenuItems)
             {
                 if (item is NavigationViewItem navItem)
                 {
-                    navItem.IsSelected = false;
-                }
-            }
-
-            // Then select the appropriate item based on current page
-            if (currentPage == "SettingsView")
-            {
-                NavView.SelectedItem = NavView.SettingsItem;
-            }
-            else
-            {
-                foreach (var item in NavView.MenuItems)
-                {
-                    if (item is NavigationViewItem navItem)
+                    var tag = navItem.Tag?.ToString();
+                    var shouldSelect = tag switch
                     {
-                        var tag = navItem.Tag?.ToString();
-                        var shouldSelect = tag switch
-                        {
-                            "GuideLibrary" => currentPage == "GuideLibraryView" || currentPage == "GuideDetailView",
-                            "AdminDashboard" => currentPage == "AdminDashboardView" ||
-                                               currentPage == "GuideEditorView" ||
-                                               currentPage == "StepEditorView",
-                            _ => false
-                        };
+                        "GuideLibrary" => currentPage == "GuideLibraryView" || currentPage == "GuideDetailView",
+                        "AdminDashboard" => currentPage == "AdminDashboardView" ||
+                                           currentPage == "GuideEditorView" ||
+                                           currentPage == "StepEditorView",
+                        _ => false
+                    };
 
-                        if (shouldSelect)
-                        {
-                            navItem.IsSelected = true;
-                            NavView.SelectedItem = navItem;
-                            break;
-                        }
+                    if (shouldSelect)
+                    {
+                        itemToSelect = navItem;
+                        break;
                     }
                 }
+            }
+
+            // Only update if selection needs to change
+            if (itemToSelect != null && NavView.SelectedItem != itemToSelect)
+            {
+                NavView.SelectedItem = itemToSelect;
+            }
+            else if (itemToSelect == null && NavView.SelectedItem != null)
+            {
+                // Clear selection for pages that don't have a menu item (like LoginView, HomeView)
+                NavView.SelectedItem = null;
             }
         }
         catch
