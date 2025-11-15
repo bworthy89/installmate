@@ -14,6 +14,8 @@ public partial class HomeViewModel : ObservableObject
     [ObservableProperty]
     private string _welcomeMessage = "Welcome to InstallVibe!";
 
+    public bool IsAdmin => _authService.IsAdmin();
+
     public HomeViewModel(INavigationService navigationService, IAuthService authService)
     {
         _navigationService = navigationService;
@@ -31,6 +33,12 @@ public partial class HomeViewModel : ObservableObject
     private void ViewGuides()
     {
         _navigationService.NavigateToGuideLibrary();
+    }
+
+    [RelayCommand]
+    private void NavigateToAdminDashboard()
+    {
+        _navigationService.NavigateToAdminDashboard();
     }
 
     [RelayCommand]

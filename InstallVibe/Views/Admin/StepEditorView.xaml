@@ -1,0 +1,229 @@
+<Page
+    x:Class="InstallVibe.Views.Admin.StepEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:InstallVibe.ViewModels"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <converters:EmptyStringToVisibilityConverter xmlns:converters="using:InstallVibe.Converters" x:Key="EmptyStringToVisibilityConverter" />
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Padding="24,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Command="{x:Bind ViewModel.GoBackCommand}" Style="{StaticResource SubtleButtonStyle}" Margin="0,0,16,0">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE72B;" FontSize="16" />
+                    <TextBlock Text="Back to Guide" />
+                </StackPanel>
+            </Button>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal" Spacing="12">
+                <TextBlock FontSize="24" FontWeight="SemiBold">
+                    <Run Text="Edit Step" />
+                    <Run Text="{x:Bind ViewModel.StepNumber, Mode=OneWay}" />
+                </TextBlock>
+                <Border
+                    Background="{ThemeResource SystemFillColorCautionBrush}"
+                    CornerRadius="4"
+                    Padding="8,4"
+                    Visibility="{x:Bind ViewModel.HasUnsavedChanges, Mode=OneWay}">
+                    <TextBlock Text="Unsaved Changes" FontSize="12" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                </Border>
+            </StackPanel>
+
+            <Button Grid.Column="2" Command="{x:Bind ViewModel.SaveStepCommand}" Style="{StaticResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE74E;" FontSize="16" />
+                    <TextBlock Text="Save Step" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" Padding="24">
+            <StackPanel Spacing="24" MaxWidth="1000">
+                <!-- Loading Indicator -->
+                <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" Width="40" Height="40" HorizontalAlignment="Center" Margin="0,32,0,0" Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+
+                <!-- Error/Success Message -->
+                <InfoBar
+                    IsOpen="{x:Bind ViewModel.ErrorMessage, Converter={StaticResource EmptyStringToVisibilityConverter}, Mode=OneWay}"
+                    Severity="Warning"
+                    Title="Message"
+                    Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                    IsClosable="True" />
+
+                <!-- Step Details -->
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Step Details" FontSize="20" FontWeight="SemiBold" />
+
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20">
+                        <StackPanel Spacing="16">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Step Title *" FontWeight="SemiBold" />
+                                <TextBox
+                                    Text="{x:Bind ViewModel.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    PlaceholderText="Enter step title (e.g., Connect the power supply)" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Instructions *" FontWeight="SemiBold" />
+                                <TextBox
+                                    Text="{x:Bind ViewModel.Instruction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    PlaceholderText="Enter detailed step-by-step instructions"
+                                    TextWrapping="Wrap"
+                                    AcceptsReturn="True"
+                                    MinHeight="120" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Required Tools" FontWeight="SemiBold" />
+                                <TextBox
+                                    Text="{x:Bind ViewModel.RequiredTools, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    PlaceholderText="e.g., Screwdriver, Wire stripper, Multimeter"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Safety Notes" FontWeight="SemiBold" />
+                                <TextBox
+                                    Text="{x:Bind ViewModel.SafetyNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    PlaceholderText="Enter any safety warnings or precautions"
+                                    TextWrapping="Wrap"
+                                    AcceptsReturn="True"
+                                    MinHeight="80" />
+                                <TextBlock
+                                    Text="Safety notes will be displayed prominently to users with warning icons"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    FontStyle="Italic" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Media Section -->
+                <StackPanel Spacing="16">
+                    <Grid>
+                        <TextBlock Text="Media (Images & Videos)" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                            <Button Command="{x:Bind ViewModel.AddImageCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE91B;" FontSize="16" />
+                                    <TextBlock Text="Add Image" />
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{x:Bind ViewModel.AddVideoCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE714;" FontSize="16" />
+                                    <TextBlock Text="Add Video" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20">
+                        <StackPanel Spacing="12">
+                            <TextBlock
+                                Text="No media added yet. Click 'Add Image' or 'Add Video' to include visual aids."
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                HorizontalAlignment="Center"
+                                Margin="0,32,0,32"
+                                Visibility="{x:Bind ViewModel.HasNoMedia, Mode=OneWay}" />
+
+                            <ItemsRepeater ItemsSource="{x:Bind ViewModel.MediaItems, Mode=OneWay}">
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:MediaItemViewModel">
+                                        <Border
+                                            Background="{ThemeResource LayerFillColorDefaultBrush}"
+                                            CornerRadius="8"
+                                            Padding="16"
+                                            Margin="0,0,0,12"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Media Type Icon -->
+                                                <Border
+                                                    Grid.Column="0"
+                                                    Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                                    CornerRadius="8"
+                                                    Width="48"
+                                                    Height="48"
+                                                    Margin="0,0,16,0">
+                                                    <FontIcon
+                                                        Glyph="{x:Bind TypeIcon}"
+                                                        FontSize="24"
+                                                        Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                                                </Border>
+
+                                                <!-- Media Info -->
+                                                <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                                                    <TextBlock Text="{x:Bind FileName}" FontSize="16" FontWeight="SemiBold" />
+                                                    <TextBlock Text="{x:Bind FilePath}" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                    <TextBlock FontSize="12" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}">
+                                                        <Run Text="{x:Bind MediaType}" />
+                                                    </TextBlock>
+                                                </StackPanel>
+
+                                                <!-- Delete Button -->
+                                                <Button Grid.Column="2" Click="DeleteMediaButton_Click" Tag="{x:Bind}" Padding="12,8">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE74D;" FontSize="16" Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                                                        <TextBlock Text="Delete" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Help Text -->
+                <Border
+                    Background="{ThemeResource LayerFillColorDefaultBrush}"
+                    CornerRadius="8"
+                    Padding="16"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1">
+                    <StackPanel Spacing="8">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE946;" FontSize="18" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock Text="Tips" FontSize="16" FontWeight="SemiBold" />
+                        </StackPanel>
+                        <TextBlock TextWrapping="Wrap" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                            <Run Text="• Use clear, concise instructions that are easy to follow" />
+                            <LineBreak />
+                            <Run Text="• Add images or videos to help illustrate complex steps" />
+                            <LineBreak />
+                            <Run Text="• Include safety notes for any potentially dangerous operations" />
+                            <LineBreak />
+                            <Run Text="• List all required tools so users can prepare in advance" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

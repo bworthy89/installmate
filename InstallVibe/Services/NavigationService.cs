@@ -131,4 +131,35 @@ public class NavigationService : INavigationService
     {
         return _navigationParameters.TryGetValue(pageType, out var parameters) ? parameters : null;
     }
+
+    // Admin navigation methods
+    public void NavigateToAdminDashboard()
+    {
+        NavigateTo<Views.Admin.AdminDashboardView>();
+    }
+
+    public void NavigateToGuideEditor(int? guideId = null)
+    {
+        if (guideId.HasValue)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "GuideId", guideId.Value }
+            };
+            NavigateTo<Views.Admin.GuideEditorView>(parameters);
+        }
+        else
+        {
+            NavigateTo<Views.Admin.GuideEditorView>();
+        }
+    }
+
+    public void NavigateToStepEditor(int stepId)
+    {
+        var parameters = new Dictionary<string, object>
+        {
+            { "stepId", stepId }
+        };
+        NavigateTo<Views.Admin.StepEditorView>(parameters);
+    }
 }

@@ -58,6 +58,9 @@ public partial class App : Application
         // Repository Services
         services.AddScoped<IGuideRepository, GuideRepository>();
 
+        // Media Storage Service
+        services.AddSingleton<IMediaStorageService, MediaStorageService>();
+
         // Navigation Service
         services.AddSingleton<INavigationService, NavigationService>();
 
@@ -69,6 +72,11 @@ public partial class App : Application
         services.AddTransient<StepViewerViewModel>();
         services.AddTransient<GuideViewerViewModel>();
 
+        // Admin ViewModels
+        services.AddTransient<AdminDashboardViewModel>();
+        services.AddTransient<GuideEditorViewModel>();
+        services.AddTransient<StepEditorViewModel>();
+
         // Views
         services.AddTransient<LoginView>();
         services.AddTransient<HomeView>();
@@ -76,6 +84,11 @@ public partial class App : Application
         services.AddTransient<GuideDetailView>();
         services.AddTransient<StepViewerView>();
         services.AddTransient<GuideViewerView>();
+
+        // Admin Views
+        services.AddTransient<Views.Admin.AdminDashboardView>();
+        services.AddTransient<Views.Admin.GuideEditorView>();
+        services.AddTransient<Views.Admin.StepEditorView>();
 
         // Main Window
         services.AddSingleton<MainWindow>();

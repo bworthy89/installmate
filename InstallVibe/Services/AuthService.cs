@@ -52,6 +52,11 @@ public class AuthService : IAuthService
         return _currentUser;
     }
 
+    public bool IsAdmin()
+    {
+        return _currentUser?.Role == UserRole.Admin;
+    }
+
     public async Task SeedAdmin()
     {
         using var scope = App.Services.CreateScope();

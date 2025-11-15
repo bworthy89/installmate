@@ -23,4 +23,9 @@ public interface INavigationService
     void NavigateToGuideDetail(int guideId);
     void NavigateToStepViewer(int guideId, int stepIndex = 0);
     void NavigateToGuideViewer(int guideId);
+
+    // Admin navigation methods
+    void NavigateToAdminDashboard();
+    void NavigateToGuideEditor(int? guideId = null);
+    void NavigateToStepEditor(int stepId);
 }

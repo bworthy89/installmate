@@ -8,5 +8,6 @@ public interface IAuthService
     Task<User?> Login(string username, string password);
     Task Logout();
     User? GetCurrentUser();
+    bool IsAdmin();
     Task SeedAdmin();
 }

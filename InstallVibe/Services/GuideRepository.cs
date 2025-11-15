@@ -84,4 +84,64 @@ public class GuideRepository : IGuideRepository
             .Include(gp => gp.User)
             .FirstOrDefaultAsync(gp => gp.GuideId == guideId && gp.UserId == userId);
     }
+
+    public async Task DeleteGuide(int guideId)
+    {
+        var guide = await _context.Guides.FindAsync(guideId);
+        if (guide != null)
+        {
+            _context.Guides.Remove(guide);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<int> CreateStep(int guideId, Step step)
+    {
+        step.GuideId = guideId;
+        _context.Steps.Add(step);
+        await _context.SaveChangesAsync();
+        return step.Id;
+    }
+
+    public async Task UpdateStep(Step step)
+    {
+        _context.Steps.Update(step);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteStep(int stepId)
+    {
+        var step = await _context.Steps.FindAsync(stepId);
+        if (step != null)
+        {
+            _context.Steps.Remove(step);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<Step?> GetStep(int stepId)
+    {
+        return await _context.Steps
+            .Include(s => s.Media)
+            .Include(s => s.Guide)
+            .FirstOrDefaultAsync(s => s.Id == stepId);
+    }
+
+    public async Task<int> AddMediaToStep(int stepId, MediaItem media)
+    {
+        media.StepId = stepId;
+        _context.MediaItems.Add(media);
+        await _context.SaveChangesAsync();
+        return media.Id;
+    }
+
+    public async Task DeleteMedia(int mediaId)
+    {
+        var media = await _context.MediaItems.FindAsync(mediaId);
+        if (media != null)
+        {
+            _context.MediaItems.Remove(media);
+            await _context.SaveChangesAsync();
+        }
+    }
 }
