@@ -7,35 +7,16 @@
         Includes keyboard focus visuals, screen reader support, and WCAG 2.1 compliance
     -->
 
-    <!-- High-Contrast Aware Focus Visual Style -->
-    <!-- Provides a visible 3px outline that works in all themes including high-contrast -->
-    <Style x:Key="AccessibleFocusVisualStyle" TargetType="Control">
-        <Setter Property="UseSystemFocusVisuals" Value="False" />
-        <Setter Property="FocusVisualMargin" Value="-3" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Control">
-                    <Rectangle
-                        Stroke="{ThemeResource FocusStrokeBrush}"
-                        StrokeThickness="3"
-                        StrokeDashArray="1 2"
-                        RadiusX="4"
-                        RadiusY="4"
-                        Margin="0" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <!-- Accessible Button Style -->
-    <!-- Ensures minimum 44x44 touch target and high-contrast border -->
+    <!-- Ensures minimum 44x44 touch target, enhanced focus indicator, and high-contrast support -->
     <Style x:Key="AccessibleButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
         <Setter Property="MinWidth" Value="{StaticResource MinButtonWidth}" />
         <Setter Property="MinHeight" Value="{StaticResource MinButtonHeight}" />
         <Setter Property="Padding" Value="16,12" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
         <Setter Property="AutomationProperties.AutomationId" Value="{Binding RelativeSource={RelativeSource Self}, Path=Name}" />
-        <Setter Property="FocusVisualStyle" Value="{StaticResource AccessibleFocusVisualStyle}" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="FocusVisualMargin" Value="-3" />
     </Style>
 
     <!-- Accessible TextBox Style -->
@@ -171,8 +152,11 @@
         <ListView ItemContainerStyle="{StaticResource AccessibleListViewItemStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid AutomationProperties.Name="{Binding Title, StringFormat='Installation Guide: {0}'}">
-                        <TextBlock Text="{Binding Title}" />
+                    <Grid AutomationProperties.Name="{Binding Title}">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="Installation Guide:" />
+                            <TextBlock Text="{Binding Title}" />
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
