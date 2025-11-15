@@ -79,12 +79,20 @@
     </Style>
 
     <!-- Monospace Small - Code snippets, IDs -->
+    <!-- Note: For background, wrap TextBlock in a Border with Background and Padding -->
     <Style x:Key="MonospaceSmallTextStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
         <Setter Property="FontFamily" Value="Consolas, Courier New" />
         <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+    </Style>
+
+    <!-- Code Snippet Container - Use this Border style with MonospaceSmallTextStyle -->
+    <Style x:Key="CodeSnippetBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
         <Setter Property="Padding" Value="4,2" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush}" />
     </Style>
 
     <!-- Error Text - Validation messages -->
