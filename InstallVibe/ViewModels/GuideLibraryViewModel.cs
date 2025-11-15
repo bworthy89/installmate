@@ -61,6 +61,7 @@ public partial class GuideLibraryViewModel : ObservableObject
 
             // Build guide list items with progress
             _allGuides = new List<GuideListItem>();
+            var isAdmin = IsAdmin;
 
             foreach (var guide in allGuidesData)
             {
@@ -78,7 +79,8 @@ public partial class GuideLibraryViewModel : ObservableObject
                     TotalSteps = totalSteps,
                     CompletedSteps = completedSteps,
                     ProgressPercentage = progressPercentage,
-                    EstimatedDurationMinutes = guide.EstimatedDurationMinutes ?? 0
+                    EstimatedDurationMinutes = guide.EstimatedDurationMinutes ?? 0,
+                    IsAdmin = isAdmin
                 });
             }
 
@@ -178,6 +180,7 @@ public class GuideListItem
     public int CompletedSteps { get; set; }
     public double ProgressPercentage { get; set; }
     public int EstimatedDurationMinutes { get; set; }
+    public bool IsAdmin { get; set; }
 
     public string ProgressText => $"{CompletedSteps} of {TotalSteps} steps";
     public string DurationText => EstimatedDurationMinutes > 0

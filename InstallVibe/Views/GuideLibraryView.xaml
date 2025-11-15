@@ -6,7 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:InstallVibe.ViewModels"
+    xmlns:converters="using:InstallVibe.Converters"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -162,7 +167,7 @@
                                         <Button
                                             Click="EditGuideButton_Click"
                                             Tag="{x:Bind Id}"
-                                            Visibility="{x:Bind RootPage.ViewModel.IsAdmin}"
+                                            Visibility="{x:Bind IsAdmin, Converter={StaticResource BoolToVisibilityConverter}}"
                                             Style="{StaticResource AccentButtonStyle}"
                                             Padding="16,8">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
