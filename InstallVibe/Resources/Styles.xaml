@@ -117,7 +117,6 @@
                 <ThemeShadow />
             </Setter.Value>
         </Setter>
-        <Setter Property="Translation" Value="0,0,4" />
     </Style>
 
     <Style x:Key="FlatCardStyle" TargetType="Border">
