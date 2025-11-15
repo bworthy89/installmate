@@ -23,7 +23,7 @@
                 Padding="{StaticResource CardPadding}"
                 PointerEntered="Card_PointerEntered"
                 PointerExited="Card_PointerExited"
-                AutomationProperties.Name="{Binding Title, StringFormat='Step: {0}'}">
+                AutomationProperties.Name="{Binding Title}">
 
                 <!-- Add transforms for animations -->
                 <Border.RenderTransform>
