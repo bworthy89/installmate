@@ -22,8 +22,7 @@
                 <!-- Guide Library Section -->
                 <NavigationViewItem
                     Content="Guide Library"
-                    Tag="GuideLibrary"
-                    Icon="Library">
+                    Tag="GuideLibrary">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8F1;" />
                     </NavigationViewItem.Icon>
@@ -32,8 +31,7 @@
                 <!-- In-Progress Section -->
                 <NavigationViewItem
                     Content="In Progress"
-                    Tag="InProgress"
-                    Icon="Clock">
+                    Tag="InProgress">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE916;" />
                     </NavigationViewItem.Icon>
@@ -42,8 +40,7 @@
                 <!-- Completed Section -->
                 <NavigationViewItem
                     Content="Completed"
-                    Tag="Completed"
-                    Icon="Accept">
+                    Tag="Completed">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE73E;" />
                     </NavigationViewItem.Icon>
