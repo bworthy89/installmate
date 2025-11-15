@@ -78,7 +78,8 @@ public partial class DiagnosticsViewModel : ObservableObject
 
             // Get OS version
             var osVersionInfo = Environment.OSVersion;
-            OsVersion = $"{osVersionInfo.VersionString} ({Environment.Is64BitOperatingSystem ? "x64" : "x86"})";
+            var architecture = Environment.Is64BitOperatingSystem ? "x64" : "x86";
+            OsVersion = $"{osVersionInfo.VersionString} ({architecture})";
 
             // Get .NET version
             DotNetVersion = Environment.Version.ToString();
