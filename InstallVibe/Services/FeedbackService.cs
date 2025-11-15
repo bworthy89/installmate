@@ -44,12 +44,12 @@ public class FeedbackService : IFeedbackService
 
     public async Task<IEnumerable<FeedbackSubmission>> GetPendingFeedbackAsync()
     {
-        var result = await _dbContext.Feedback
+        List<FeedbackSubmission> result = await _dbContext.Feedback
             .Where(f => f.Status == FeedbackStatus.Pending)
             .OrderByDescending(f => f.SubmittedAt)
             .ToListAsync();
 
-        return result;
+        return (IEnumerable<FeedbackSubmission>)result;
     }
 
     public async Task<string> ExportFeedbackAsync(string outputPath)
