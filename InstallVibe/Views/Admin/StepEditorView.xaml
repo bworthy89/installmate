@@ -3,10 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:InstallVibe.ViewModels"
+    xmlns:converters="using:InstallVibe.Converters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <converters:EmptyStringToVisibilityConverter xmlns:converters="using:InstallVibe.Converters" x:Key="EmptyStringToVisibilityConverter" />
+        <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter" />
     </Page.Resources>
 
     <Grid>
