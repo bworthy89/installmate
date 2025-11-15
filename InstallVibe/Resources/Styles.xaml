@@ -128,7 +128,7 @@
     </Style>
 
     <Style x:Key="InteractiveCardStyle" TargetType="Border" BasedOn="{StaticResource ElevatedCardStyle}">
-        <Setter Property="Cursor" Value="Hand" />
+        <!-- Note: Cursor must be set in code-behind using ProtectedCursor or wrap in a Button for pointer feedback -->
     </Style>
 
     <!-- NavigationViewItem Style -->
@@ -189,7 +189,7 @@
     <Style x:Key="SelectableListItemStyle" TargetType="Border" BasedOn="{StaticResource ListItemContainerStyle}">
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
         <Setter Property="Margin" Value="0,2" />
-        <Setter Property="Cursor" Value="Hand" />
+        <!-- Note: Cursor must be set in code-behind using ProtectedCursor or wrap in a Button for pointer feedback -->
     </Style>
 
     <!-- Divider Style -->
