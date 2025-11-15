@@ -28,7 +28,7 @@ public class NetworkServiceTests
         var result = await _networkService.IsConnectedAsync();
 
         // Assert
-        result.Should().BeOfType<bool>();
+        result.Should().Match(x => x == true || x == false);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class NetworkServiceTests
         var isConnected = _networkService.IsConnected;
 
         // Assert
-        isConnected.Should().BeOfType<bool>();
+        isConnected.Should().Match(x => x == true || x == false);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class NetworkServiceTests
         var connectionType = _networkService.GetConnectionType();
 
         // Assert
-        connectionType.Should().BeOfType<NetworkConnectionType>();
+        connectionType.Should().BeAssignableTo<NetworkConnectionType>();
     }
 
     [Fact]
@@ -81,6 +81,6 @@ public class NetworkServiceTests
         var result = await _networkService.IsHostReachableAsync("localhost");
 
         // Assert
-        result.Should().BeOfType<bool>();
+        result.Should().Match(x => x == true || x == false);
     }
 }

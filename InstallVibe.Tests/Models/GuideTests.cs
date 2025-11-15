@@ -154,8 +154,8 @@ public class GuideTests
         {
             Id = 1,
             StepId = step.Id,
-            Type = MediaType.Image,
-            Url = "image1.png"
+            MediaType = MediaType.Image,
+            FilePath = "images/step1.png"
         };
 
         // Act
@@ -164,5 +164,42 @@ public class GuideTests
         // Assert
         step.Media.Should().HaveCount(1);
         step.Media.Should().Contain(mediaItem);
+    }
+
+    [Fact]
+    public void MediaItem_SetsPropertiesCorrectly()
+    {
+        // Arrange & Act
+        var mediaItem = new MediaItem
+        {
+            Id = 1,
+            StepId = 5,
+            MediaType = MediaType.Video,
+            FilePath = "videos/installation.mp4"
+        };
+
+        // Assert
+        mediaItem.Id.Should().Be(1);
+        mediaItem.StepId.Should().Be(5);
+        mediaItem.MediaType.Should().Be(MediaType.Video);
+        mediaItem.FilePath.Should().Be("videos/installation.mp4");
+    }
+
+    [Fact]
+    public void MediaItem_ParameterizedConstructor_SetsPropertiesCorrectly()
+    {
+        // Arrange & Act
+        var mediaItem = new MediaItem(
+            id: 1,
+            stepId: 5,
+            mediaType: MediaType.Image,
+            filePath: "images/diagram.png"
+        );
+
+        // Assert
+        mediaItem.Id.Should().Be(1);
+        mediaItem.StepId.Should().Be(5);
+        mediaItem.MediaType.Should().Be(MediaType.Image);
+        mediaItem.FilePath.Should().Be("images/diagram.png");
     }
 }
