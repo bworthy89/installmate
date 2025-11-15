@@ -373,12 +373,10 @@ public partial class GuideEditorViewModel : ObservableObject
                 PageTitle = "Edit Guide";
 
                 // Update step IDs in the UI collection
-                for (int i = 0; i < Steps.Count; i++)
+                var createdSteps = newGuide.Steps.OrderBy(s => s.StepNumber).ToList();
+                for (int i = 0; i < Steps.Count && i < createdSteps.Count; i++)
                 {
-                    if (i < newGuide.Steps.Count)
-                    {
-                        Steps[i].Id = newGuide.Steps[i].Id;
-                    }
+                    Steps[i].Id = createdSteps[i].Id;
                 }
 
                 ErrorMessage = "Guide created successfully!";
