@@ -1,0 +1,382 @@
+# Azure DevOps Pipeline for InstallVibe
+# Builds, signs, and deploys MSIX packages with staged rollout
+
+trigger:
+  tags:
+    include:
+      - v*.*.*
+  branches:
+    include:
+      - main
+      - release/*
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  solution: 'InstallVibe.sln'
+  packageProject: 'InstallVibe.Package/InstallVibe.Package.wapproj'
+  buildConfiguration: 'Release'
+  dotnetVersion: '7.0.x'
+
+# Variable groups (configure in Azure DevOps Library):
+# - InstallVibe-Certificates: Contains certificate secrets
+# - InstallVibe-Deployment: Contains CDN/storage credentials
+
+stages:
+  # ==================================================
+  # Stage 1: Build
+  # ==================================================
+  - stage: Build
+    displayName: 'Build MSIX Packages'
+    jobs:
+      - job: BuildJob
+        displayName: 'Build for all platforms'
+        pool:
+          vmImage: 'windows-latest'
+
+        strategy:
+          matrix:
+            x64:
+              buildPlatform: 'x64'
+            ARM64:
+              buildPlatform: 'ARM64'
+
+        steps:
+          - checkout: self
+            fetchDepth: 0  # Full history for versioning
+
+          - task: UseDotNet@2
+            displayName: 'Install .NET SDK'
+            inputs:
+              version: $(dotnetVersion)
+
+          - task: NuGetToolInstaller@1
+            displayName: 'Install NuGet'
+
+          - task: NuGetCommand@2
+            displayName: 'Restore NuGet packages'
+            inputs:
+              command: 'restore'
+              restoreSolution: '$(solution)'
+
+          - task: PowerShell@2
+            displayName: 'Update version number'
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Extract version from git tag or use CI build number
+                if ($env:BUILD_SOURCEBRANCH -match 'refs/tags/v([\d\.]+)') {
+                  $version = $matches[1]
+                } else {
+                  $version = "1.0.$(Build.BuildId).0"
+                }
+
+                Write-Host "##[section]Setting version to: $version"
+
+                # Update Package.appxmanifest
+                $manifestPath = "InstallVibe.Package/Package.appxmanifest"
+                $manifest = Get-Content $manifestPath -Raw
+                $manifest = $manifest -replace 'Version="[\d\.]+"', "Version=`"$version`""
+                Set-Content $manifestPath $manifest
+
+                # Set pipeline variable
+                Write-Host "##vso[task.setvariable variable=PackageVersion;isOutput=true]$version"
+              name: 'SetVersion'
+
+          - task: MSBuild@1
+            displayName: 'Build MSIX Package'
+            inputs:
+              solution: '$(packageProject)'
+              platform: '$(buildPlatform)'
+              configuration: '$(buildConfiguration)'
+              msbuildArguments: >
+                /p:AppxBundle=Never
+                /p:AppxPackageDir=$(Build.ArtifactStagingDirectory)\
+                /p:GenerateAppInstallerFile=False
+                /p:AppxPackageSigningEnabled=False
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish build artifacts'
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'msix-package-$(buildPlatform)'
+
+  # ==================================================
+  # Stage 2: Sign
+  # ==================================================
+  - stage: Sign
+    displayName: 'Sign MSIX Packages'
+    dependsOn: Build
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+    jobs:
+      - job: SignJob
+        displayName: 'Code Sign Packages'
+        pool:
+          vmImage: 'windows-latest'
+
+        steps:
+          - checkout: self
+
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download x64 package'
+            inputs:
+              artifactName: 'msix-package-x64'
+              downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download ARM64 package'
+            inputs:
+              artifactName: 'msix-package-ARM64'
+              downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+          # Option 1: Sign with Azure Key Vault
+          - task: AzureCLI@2
+            displayName: 'Sign packages using Azure Key Vault'
+            condition: eq(variables['SigningMethod'], 'AzureKeyVault')
+            inputs:
+              azureSubscription: 'InstallVibe-Azure-Connection'
+              scriptType: 'pscore'
+              scriptLocation: 'scriptPath'
+              scriptPath: 'Scripts/Sign-MSIX.ps1'
+              arguments: >
+                -PackagePath "$(Build.ArtifactStagingDirectory)/msix-package-x64/**/*.msix"
+                -UseAzureKeyVault
+                -KeyVaultName "$(KeyVaultName)"
+                -CertificateName "$(CertificateName)"
+
+          # Option 2: Sign with certificate from secure files
+          - task: DownloadSecureFile@1
+            displayName: 'Download signing certificate'
+            condition: eq(variables['SigningMethod'], 'SecureFile')
+            name: 'signingCert'
+            inputs:
+              secureFile: 'InstallVibe-CodeSigning.pfx'
+
+          - task: PowerShell@2
+            displayName: 'Sign packages with certificate file'
+            condition: eq(variables['SigningMethod'], 'SecureFile')
+            inputs:
+              targetType: 'filePath'
+              filePath: 'Scripts/Sign-MSIX.ps1'
+              arguments: >
+                -PackagePath "$(Build.ArtifactStagingDirectory)/msix-package-x64/**/*.msix"
+                -CertificatePath "$(signingCert.secureFilePath)"
+                -CertificatePassword "$(CertificatePassword)"
+            env:
+              CERT_PASSWORD: $(CertificatePassword)
+
+          - task: PowerShell@2
+            displayName: 'Sign ARM64 package'
+            condition: eq(variables['SigningMethod'], 'SecureFile')
+            inputs:
+              targetType: 'filePath'
+              filePath: 'Scripts/Sign-MSIX.ps1'
+              arguments: >
+                -PackagePath "$(Build.ArtifactStagingDirectory)/msix-package-ARM64/**/*.msix"
+                -CertificatePath "$(signingCert.secureFilePath)"
+                -CertificatePassword "$(CertificatePassword)"
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish signed packages'
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'msix-packages-signed'
+
+  # ==================================================
+  # Stage 3: Bundle
+  # ==================================================
+  - stage: Bundle
+    displayName: 'Create MSIX Bundle'
+    dependsOn: Sign
+    jobs:
+      - job: BundleJob
+        displayName: 'Bundle multi-architecture package'
+        pool:
+          vmImage: 'windows-latest'
+
+        steps:
+          - checkout: self
+
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download signed packages'
+            inputs:
+              artifactName: 'msix-packages-signed'
+              downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+          - task: PowerShell@2
+            displayName: 'Create MSIX Bundle'
+            inputs:
+              targetType: 'inline'
+              script: |
+                $version = "$(Build.BuildNumber)"
+                $bundleName = "InstallVibe_${version}_bundle.msixbundle"
+
+                # Find makeappx.exe
+                $makeappx = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\**\x64\makeappx.exe" | Select-Object -First 1
+
+                # Create bundle
+                & $makeappx bundle /d "$(Build.ArtifactStagingDirectory)\msix-packages-signed" /p "$(Build.ArtifactStagingDirectory)\$bundleName" /bv $version
+
+                Write-Host "##vso[task.setvariable variable=BundlePath]$(Build.ArtifactStagingDirectory)\$bundleName"
+                Write-Host "##vso[task.setvariable variable=BundleName]$bundleName"
+
+          - task: PowerShell@2
+            displayName: 'Sign bundle'
+            inputs:
+              targetType: 'filePath'
+              filePath: 'Scripts/Sign-MSIX.ps1'
+              arguments: >
+                -PackagePath "$(BundlePath)"
+                -UseAzureKeyVault
+                -KeyVaultName "$(KeyVaultName)"
+                -CertificateName "$(CertificateName)"
+
+          - task: PowerShell@2
+            displayName: 'Generate App Installer'
+            inputs:
+              targetType: 'inline'
+              script: |
+                $version = "$(Build.BuildNumber)"
+                $bundleName = "$(BundleName)"
+                $updateUrl = "$(UpdateServerUrl)/installvibe"
+
+                # Update appinstaller file
+                $appInstaller = Get-Content "InstallVibe.Package/InstallVibe.appinstaller" -Raw
+                $appInstaller = $appInstaller -replace 'Version="[\d\.]+"', "Version=`"$version`""
+                $appInstaller = $appInstaller -replace 'Uri="[^"]*InstallVibe\.appinstaller"', "Uri=`"$updateUrl/InstallVibe.appinstaller`""
+                $appInstaller = $appInstaller -replace 'Uri="[^"]*\.msixbundle"', "Uri=`"$updateUrl/$bundleName`""
+
+                Set-Content "$(Build.ArtifactStagingDirectory)\InstallVibe.appinstaller" $appInstaller
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish release bundle'
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'release-bundle'
+
+  # ==================================================
+  # Stage 4: Deploy to Development
+  # ==================================================
+  - stage: DeployDevelopment
+    displayName: 'Deploy to Development'
+    dependsOn: Bundle
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+
+    jobs:
+      - deployment: DeployDev
+        displayName: 'Deploy to Dev Channel'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Development'
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@0
+                  inputs:
+                    artifactName: 'release-bundle'
+                    downloadPath: '$(Pipeline.Workspace)'
+
+                - task: AzureCLI@2
+                  displayName: 'Upload to Azure Blob (Dev)'
+                  inputs:
+                    azureSubscription: 'InstallVibe-Azure-Connection'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      az storage blob upload-batch \
+                        --account-name $(StorageAccountName) \
+                        --destination installvibe/dev \
+                        --source $(Pipeline.Workspace)/release-bundle \
+                        --overwrite
+
+  # ==================================================
+  # Stage 5: Deploy to Testing
+  # ==================================================
+  - stage: DeployTesting
+    displayName: 'Deploy to Testing'
+    dependsOn: DeployDevelopment
+    condition: succeeded()
+
+    jobs:
+      - deployment: DeployTest
+        displayName: 'Deploy to Test Channel'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Testing'
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@0
+                  inputs:
+                    artifactName: 'release-bundle'
+                    downloadPath: '$(Pipeline.Workspace)'
+
+                - task: AzureCLI@2
+                  displayName: 'Upload to Azure Blob (Testing)'
+                  inputs:
+                    azureSubscription: 'InstallVibe-Azure-Connection'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      az storage blob upload-batch \
+                        --account-name $(StorageAccountName) \
+                        --destination installvibe/testing \
+                        --source $(Pipeline.Workspace)/release-bundle \
+                        --overwrite
+
+  # ==================================================
+  # Stage 6: Deploy to Production
+  # ==================================================
+  - stage: DeployProduction
+    displayName: 'Deploy to Production'
+    dependsOn: DeployTesting
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+
+    jobs:
+      - deployment: DeployProd
+        displayName: 'Deploy to Production Channel'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'Production'
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadBuildArtifacts@0
+                  inputs:
+                    artifactName: 'release-bundle'
+                    downloadPath: '$(Pipeline.Workspace)'
+
+                - task: AzureCLI@2
+                  displayName: 'Upload to Azure Blob (Production)'
+                  inputs:
+                    azureSubscription: 'InstallVibe-Azure-Connection'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      az storage blob upload-batch \
+                        --account-name $(StorageAccountName) \
+                        --destination installvibe \
+                        --source $(Pipeline.Workspace)/release-bundle \
+                        --overwrite
+
+                - task: PowerShell@2
+                  displayName: 'Purge CDN Cache'
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      # Purge CDN cache to ensure users get latest version
+                      az cdn endpoint purge \
+                        --resource-group $(ResourceGroupName) \
+                        --profile-name $(CDNProfileName) \
+                        --name $(CDNEndpointName) \
+                        --content-paths "/installvibe/*"

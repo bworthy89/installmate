@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "major": 1,
+  "minor": 0,
+  "patch": 0,
+  "build": 0,
+  "preRelease": null,
+  "metadata": null,
+  "fullVersion": "1.0.0.0",
+  "versionTag": "v1.0.0",
+  "releaseDate": "2024-01-15",
+  "releaseName": "Initial Release",
+  "changelog": [
+    "Initial release of InstallVibe",
+    "Interactive installation guide platform",
+    "Step-by-step wizard with rich media",
+    "Offline support for factory floors",
+    "Multi-language support",
+    "Accessibility features (WCAG 2.1 Level AA)",
+    "Auto-update system"
+  ]
+}
