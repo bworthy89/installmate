@@ -12,7 +12,7 @@ namespace InstallVibe.ViewModels;
 public partial class FeedbackViewModel : ObservableObject
 {
     private readonly IFeedbackService _feedbackService;
-    private readonly IAuthenticationService _authService;
+    private readonly IAuthService _authService;
 
     [ObservableProperty]
     private FeedbackType selectedFeedbackType = FeedbackType.General;
@@ -54,7 +54,7 @@ public partial class FeedbackViewModel : ObservableObject
     public ObservableCollection<FeedbackCategory> Categories { get; }
     public ObservableCollection<IssueSeverity> Severities { get; }
 
-    public FeedbackViewModel(IFeedbackService feedbackService, IAuthenticationService authService)
+    public FeedbackViewModel(IFeedbackService feedbackService, IAuthService authService)
     {
         _feedbackService = feedbackService;
         _authService = authService;
