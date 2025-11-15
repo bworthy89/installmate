@@ -15,6 +15,9 @@ public interface INavigationService
     void NavigateTo(Type pageType, Dictionary<string, object> parameters);
     void GoBack();
 
+    // Navigation parameter retrieval
+    Dictionary<string, object>? GetNavigationParameters(Type pageType);
+
     // Strongly-typed navigation methods
     void NavigateToGuideLibrary();
     void NavigateToGuideDetail(int guideId);
