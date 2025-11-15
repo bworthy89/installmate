@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
 using InstallVibe.Services;
@@ -9,10 +10,10 @@ public sealed partial class GuideDetailView : Page
     public GuideDetailViewModel ViewModel { get; }
     private readonly INavigationService _navigationService;
 
-    public GuideDetailView(GuideDetailViewModel viewModel, INavigationService navigationService)
+    public GuideDetailView()
     {
-        ViewModel = viewModel;
-        _navigationService = navigationService;
+        ViewModel = App.Services.GetRequiredService<GuideDetailViewModel>();
+        _navigationService = App.Services.GetRequiredService<INavigationService>();
         DataContext = ViewModel;
         InitializeComponent();
 

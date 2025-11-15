@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
 using InstallVibe.Services;
@@ -9,10 +10,10 @@ public sealed partial class StepViewerView : Page
     public StepViewerViewModel ViewModel { get; }
     private readonly INavigationService _navigationService;
 
-    public StepViewerView(StepViewerViewModel viewModel, INavigationService navigationService)
+    public StepViewerView()
     {
-        ViewModel = viewModel;
-        _navigationService = navigationService;
+        ViewModel = App.Services.GetRequiredService<StepViewerViewModel>();
+        _navigationService = App.Services.GetRequiredService<INavigationService>();
         DataContext = ViewModel;
         InitializeComponent();
 

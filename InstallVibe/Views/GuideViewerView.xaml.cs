@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -12,10 +13,10 @@ public sealed partial class GuideViewerView : Page
     public GuideViewerViewModel ViewModel { get; }
     private readonly INavigationService _navigationService;
 
-    public GuideViewerView(GuideViewerViewModel viewModel, INavigationService navigationService)
+    public GuideViewerView()
     {
-        ViewModel = viewModel;
-        _navigationService = navigationService;
+        ViewModel = App.Services.GetRequiredService<GuideViewerViewModel>();
+        _navigationService = App.Services.GetRequiredService<INavigationService>();
         DataContext = ViewModel;
         InitializeComponent();
 

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
 
@@ -7,9 +8,9 @@ public sealed partial class LoginView : Page
 {
     public LoginViewModel ViewModel { get; }
 
-    public LoginView(LoginViewModel viewModel)
+    public LoginView()
     {
-        ViewModel = viewModel;
+        ViewModel = App.Services.GetRequiredService<LoginViewModel>();
         InitializeComponent();
     }
 }

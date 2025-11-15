@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
@@ -9,9 +10,9 @@ public sealed partial class GuideLibraryView : Page
 {
     public GuideLibraryViewModel ViewModel { get; }
 
-    public GuideLibraryView(GuideLibraryViewModel viewModel)
+    public GuideLibraryView()
     {
-        ViewModel = viewModel;
+        ViewModel = App.Services.GetRequiredService<GuideLibraryViewModel>();
         DataContext = ViewModel;
         InitializeComponent();
 
