@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  InstallVibe.appinstaller - App Installer Configuration
+
+  This file enables automatic updates for InstallVibe via MSIX app installer.
+  Deploy this file alongside the MSIX bundle to a web server (CDN, Azure Blob, AWS S3, or internal server).
+
+  DEPLOYMENT:
+  1. Upload InstallVibe.appinstaller and MSIX bundles to your hosting location
+  2. Update the Uri attributes below to match your hosting URLs
+  3. Users install from: https://your-server.com/installvibe/InstallVibe.appinstaller
+  4. Windows checks for updates automatically based on HoursBetweenUpdateChecks
+
+  VERSIONING:
+  - Increment Version attribute with each release
+  - OnLaunch: Check for updates when app starts
+  - AutomaticBackgroundTask: Check for updates while app runs
+  - ForceUpdateFromAnyVersion: Force install critical updates
+-->
+<AppInstaller
+    xmlns="http://schemas.microsoft.com/appx/appinstaller/2021"
+    Version="1.0.0.0"
+    Uri="https://updates.yourcompany.com/installvibe/InstallVibe.appinstaller">
+
+  <!--
+    Main Package Reference
+    Points to the MSIX bundle containing all architectures (x64 + ARM64)
+  -->
+  <MainBundle
+      Name="InstallVibe"
+      Publisher="CN=YourCompany"
+      Version="1.0.0.0"
+      Uri="https://updates.yourcompany.com/installvibe/InstallVibe_1.0.0.0_x64_arm64_bundle.msixbundle" />
+
+  <!--
+    Update Settings
+    Configure how and when the app checks for updates
+  -->
+  <UpdateSettings>
+    <!--
+      OnLaunch
+      Check for updates when the application launches
+
+      HoursBetweenUpdateChecks:
+        - 0: Check every launch (recommended for critical apps)
+        - 12: Check twice daily
+        - 24: Check daily (recommended for stable environments)
+        - 168: Check weekly
+
+      ShowPrompt:
+        - true: Show update dialog to user (recommended for opt-in updates)
+        - false: Update silently (recommended for managed deployments)
+
+      UpdateBlocksActivation:
+        - true: Block app launch until update completes (for mandatory updates)
+        - false: Allow app to run while update downloads in background
+    -->
+    <OnLaunch
+        HoursBetweenUpdateChecks="24"
+        ShowPrompt="true"
+        UpdateBlocksActivation="false" />
+
+    <!--
+      AutomaticBackgroundTask (optional)
+      Check for updates while app is running
+
+      Uncomment to enable background update checking:
+    -->
+    <!--
+    <AutomaticBackgroundTask />
+    -->
+
+    <!--
+      ForceUpdateFromAnyVersion (critical updates only)
+
+      Forces immediate update regardless of user choice or update settings.
+      USE SPARINGLY - only for critical security patches or breaking changes.
+
+      To enable forced updates:
+      1. Uncomment <ForceUpdateFromAnyVersion> below
+      2. Deploy new appinstaller file with updated version
+      3. All clients will be forced to update on next launch
+    -->
+    <!--
+    <ForceUpdateFromAnyVersion>true</ForceUpdateFromAnyVersion>
+    -->
+  </UpdateSettings>
+
+  <!--
+    Optional Dependencies
+    Reference additional framework packages if needed
+  -->
+  <!--
+  <Dependencies>
+    <Package
+        Name="Microsoft.VCLibs.140.00.UWPDesktop"
+        Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+        Version="14.0.30704.0"
+        ProcessorArchitecture="x64"
+        Uri="https://updates.yourcompany.com/installvibe/dependencies/Microsoft.VCLibs.x64.14.00.Desktop.appx" />
+    <Package
+        Name="Microsoft.VCLibs.140.00.UWPDesktop"
+        Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+        Version="14.0.30704.0"
+        ProcessorArchitecture="arm64"
+        Uri="https://updates.yourcompany.com/installvibe/dependencies/Microsoft.VCLibs.arm64.14.00.Desktop.appx" />
+  </Dependencies>
+  -->
+
+</AppInstaller>

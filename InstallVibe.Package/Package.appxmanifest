@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Package.appxmanifest - MSIX package manifest for InstallVibe
+
+  Defines app identity, capabilities, visual assets, and activation protocols.
+  This manifest is used by Windows to register and manage the application.
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap uap3 uap5 rescap desktop">
+
+  <!--
+    Identity Section
+    - Name: Must match your publisher's reserved app name in Partner Center (or use internal name)
+    - Publisher: Must match your code-signing certificate's Subject CN
+    - Version: Semantic version (major.minor.build.revision) - MUST be incremented for each release
+  -->
+  <Identity
+    Name="InstallVibe"
+    Publisher="CN=YourCompany"
+    Version="1.0.0.0"
+    ProcessorArchitecture="x64" />
+
+  <!--
+    Properties Section
+    Display name, publisher name, and branding shown to users
+  -->
+  <Properties>
+    <DisplayName>InstallVibe</DisplayName>
+    <PublisherDisplayName>Your Company</PublisherDisplayName>
+    <Logo>Images\StoreLogo.png</Logo>
+    <Description>InstallVibe - Interactive Installation Guide Platform for Manufacturing Technicians</Description>
+  </Properties>
+
+  <!--
+    Dependencies Section
+    Minimum and tested Windows versions
+  -->
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" />
+  </Dependencies>
+
+  <!--
+    Resources Section
+    Supported languages (add more as needed)
+  -->
+  <Resources>
+    <Resource Language="en-US"/>
+  </Resources>
+
+  <!--
+    Applications Section
+    Main application entry point and visual elements
+  -->
+  <Applications>
+    <Application Id="InstallVibe"
+      Executable="InstallVibe.exe"
+      EntryPoint="$targetentrypoint$">
+
+      <!--
+        Visual Elements
+        Tile assets, background colors, and branding
+      -->
+      <uap:VisualElements
+        DisplayName="InstallVibe"
+        Description="Interactive Installation Guide Platform"
+        BackgroundColor="transparent"
+        Square150x150Logo="Images\Square150x150Logo.png"
+        Square44x44Logo="Images\Square44x44Logo.png">
+
+        <!--
+          Default Tile
+          Shown on Start Menu
+        -->
+        <uap:DefaultTile
+          Wide310x150Logo="Images\Wide310x150Logo.png"
+          Square71x71Logo="Images\SmallTile.png"
+          Square310x310Logo="Images\LargeTile.png"
+          ShortName="InstallVibe">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+
+        <!--
+          Splash Screen
+          Shown during app launch
+        -->
+        <uap:SplashScreen Image="Images\SplashScreen.png" BackgroundColor="#0078D4"/>
+
+        <!--
+          Initial Rotation Preference
+          Lock to landscape for factory floor tablets
+        -->
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="landscapeFlipped"/>
+        </uap:InitialRotationPreference>
+      </uap:VisualElements>
+
+      <!--
+        File Type Associations
+        Register .ivguide (InstallVibe Guide) file extension
+      -->
+      <Extensions>
+        <!-- Custom file extension for guide files -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap3:FileTypeAssociation Name="ivguide">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.ivguide</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>InstallVibe Guide</uap:DisplayName>
+            <uap:Logo>Images\FileTypeLogo.png</uap:Logo>
+            <uap:InfoTip>Installation guide for InstallVibe</uap:InfoTip>
+            <uap:EditFlags OpenIsSafe="true"/>
+          </uap3:FileTypeAssociation>
+        </uap:Extension>
+
+        <!--
+          Protocol Activation
+          Enables installvibe:// URL scheme for deep linking
+          Example: installvibe://guide/123 or installvibe://step/456
+        -->
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="installvibe">
+            <uap:DisplayName>InstallVibe Protocol</uap:DisplayName>
+            <uap:Logo>Images\ProtocolLogo.png</uap:Logo>
+          </uap:Protocol>
+        </uap:Extension>
+
+        <!--
+          Toast Notifications
+          Enable system notifications for update reminders and completion alerts
+        -->
+        <desktop:Extension Category="windows.toastNotificationActivation">
+          <desktop:ToastNotificationActivation ToastActivatorCLSID="51B7B7B0-8C90-4C90-8C90-8C908C908C90" />
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <!--
+    Capabilities Section
+    Permissions required by the application
+  -->
+  <Capabilities>
+    <!-- Internet access for update checking and content downloads -->
+    <Capability Name="internetClient" />
+
+    <!-- Access to user's Pictures library for screenshots/documentation -->
+    <uap:Capability Name="picturesLibrary" />
+
+    <!-- Access to user's Documents library for guide exports -->
+    <uap:Capability Name="documentsLibrary" />
+
+    <!--
+      Restricted Capabilities (require justification)
+      These may need special approval from IT security
+    -->
+
+    <!-- Allow running with full trust (required for some factory floor integrations) -->
+    <rescap:Capability Name="runFullTrust" />
+
+    <!--
+      UIAccess for assistive technology features
+      NOTE: Requires special code-signing certificate and installation to Program Files
+      Only enable if technicians need screen-reader integration or automation tools
+    -->
+    <!-- <rescap:Capability Name="uiAccess" /> -->
+
+    <!--
+      Broadband/network access (if app needs local network discovery)
+      Uncomment if InstallVibe needs to discover local servers/devices
+    -->
+    <!-- <Capability Name="internetClientServer" /> -->
+    <!-- <Capability Name="privateNetworkClientServer" /> -->
+  </Capabilities>
+</Package>

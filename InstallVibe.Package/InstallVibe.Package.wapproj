@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  InstallVibe.Package.wapproj - Windows Application Packaging Project
+
+  This project builds the MSIX package for InstallVibe, including:
+  - Main application binaries
+  - Visual assets (logos, tiles, splash screens)
+  - Dependencies and runtime
+  - Code signing configuration
+-->
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <ProjectGuid>3B7B7B7B-7B7B-7B7B-7B7B-7B7B7B7B7B7B</ProjectGuid>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <EntryPointProjectUniqueName>..\InstallVibe\InstallVibe.csproj</EntryPointProjectUniqueName>
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <PackageCertificateThumbprint></PackageCertificateThumbprint>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestCertificate>False</GenerateTestCertificate>
+    <AppxPackageDir>AppPackages\</AppxPackageDir>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+  </PropertyGroup>
+
+  <!--
+    Import Microsoft WapProj targets
+  -->
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
+
+  <!--
+    Configuration-specific properties
+  -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <AppxBundle>Never</AppxBundle>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <AppxBundle>Never</AppxBundle>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <AppxBundle>Always</AppxBundle>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <AppxBundle>Always</AppxBundle>
+  </PropertyGroup>
+
+  <!--
+    Project References
+    Reference the main InstallVibe application project
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\InstallVibe\InstallVibe.csproj">
+      <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
+      <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--
+    Package Manifest
+  -->
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+
+  <!--
+    Visual Assets
+    All image files for tiles, logos, and splash screen
+  -->
+  <ItemGroup>
+    <Content Include="Images\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--
+    Additional Content Files
+    Include any extra files needed in the package
+  -->
+  <ItemGroup>
+    <!-- README and licenses -->
+    <Content Include="..\README.md">
+      <Link>README.md</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
+    <!-- Privacy policy and terms -->
+    <Content Include="..\PRIVACY.md" Condition="Exists('..\PRIVACY.md')">
+      <Link>PRIVACY.md</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
+    <!-- Sample guides for first-run experience -->
+    <Content Include="..\SampleData\**\*.*" Condition="Exists('..\SampleData')">
+      <Link>SampleData\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--
+    Native Dependencies
+    Include any native DLLs like SQLCipher (if using SQLCipher instead of SQLite)
+  -->
+  <ItemGroup>
+    <!-- Example: SQLCipher native binaries -->
+    <!-- Uncomment and adjust paths if using SQLCipher for encryption -->
+    <!--
+    <Content Include="..\packages\SQLCipher.Core.*\runtimes\win-x64\native\**\*.dll" Condition="'$(Platform)' == 'x64'">
+      <Link>runtimes\win-x64\native\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\SQLCipher.Core.*\runtimes\win-arm64\native\**\*.dll" Condition="'$(Platform)' == 'ARM64'">
+      <Link>runtimes\win-arm64\native\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    -->
+  </ItemGroup>
+
+  <!--
+    Package Certificate
+    For development: Use test certificate
+    For production: Reference your enterprise code-signing certificate
+  -->
+  <ItemGroup>
+    <!-- Development certificate (auto-generated) -->
+    <None Include="InstallVibe.Package_TemporaryKey.pfx" Condition="'$(Configuration)' == 'Debug'" />
+
+    <!-- Production certificate (stored securely, referenced in CI/CD) -->
+    <!-- Do NOT commit production certificates to source control -->
+    <!-- Certificate should be injected by build pipeline from secure storage -->
+  </ItemGroup>
+
+  <!--
+    Custom Build Steps
+  -->
+  <Target Name="PreBuild" BeforeTargets="Build">
+    <Message Text="Building InstallVibe MSIX Package for $(Platform) - $(Configuration)" Importance="high" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="Build">
+    <Message Text="MSIX Package build completed: $(AppxPackageDir)" Importance="high" />
+  </Target>
+
+</Project>
