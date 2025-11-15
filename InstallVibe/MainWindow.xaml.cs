@@ -249,7 +249,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
                 args.Handled = true;
             }
         };
-        KeyboardAccelerators.Add(goBackAccelerator);
+        RootGrid.KeyboardAccelerators.Add(goBackAccelerator);
 
         // Alt+Home: Navigate to Home/Guide Library
         var goHomeAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
@@ -262,7 +262,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
             _navigationService.NavigateToGuideLibrary();
             args.Handled = true;
         };
-        KeyboardAccelerators.Add(goHomeAccelerator);
+        RootGrid.KeyboardAccelerators.Add(goHomeAccelerator);
 
         // Ctrl+Comma: Open Settings
         var settingsAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
@@ -275,7 +275,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
             _navigationService.NavigateToSettings();
             args.Handled = true;
         };
-        KeyboardAccelerators.Add(settingsAccelerator);
+        RootGrid.KeyboardAccelerators.Add(settingsAccelerator);
 
         // F1: Help (future implementation)
         var helpAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
@@ -288,7 +288,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
             System.Diagnostics.Debug.WriteLine("F1 - Help requested");
             args.Handled = true;
         };
-        KeyboardAccelerators.Add(helpAccelerator);
+        RootGrid.KeyboardAccelerators.Add(helpAccelerator);
 
         // Ctrl+F: Search (future implementation)
         var searchAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
@@ -302,7 +302,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
             System.Diagnostics.Debug.WriteLine("Ctrl+F - Search requested");
             args.Handled = true;
         };
-        KeyboardAccelerators.Add(searchAccelerator);
+        RootGrid.KeyboardAccelerators.Add(searchAccelerator);
 
         /*
          * KEYBOARD SHORTCUTS REFERENCE:

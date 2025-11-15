@@ -7,7 +7,7 @@
     mc:Ignorable="d"
     Title="InstallVibe">
 
-    <Grid>
+    <Grid x:Name="RootGrid">
         <NavigationView
             x:Name="NavView"
             IsBackButtonVisible="Auto"
