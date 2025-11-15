@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
@@ -11,10 +12,10 @@ public sealed partial class GuideEditorView : Page
     public GuideEditorViewModel ViewModel { get; }
     private readonly INavigationService _navigationService;
 
-    public GuideEditorView(GuideEditorViewModel viewModel, INavigationService navigationService)
+    public GuideEditorView()
     {
-        ViewModel = viewModel;
-        _navigationService = navigationService;
+        ViewModel = App.Services.GetRequiredService<GuideEditorViewModel>();
+        _navigationService = App.Services.GetRequiredService<INavigationService>();
         DataContext = ViewModel;
         InitializeComponent();
 

@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
@@ -9,9 +10,9 @@ public sealed partial class AdminDashboardView : Page
 {
     public AdminDashboardViewModel ViewModel { get; }
 
-    public AdminDashboardView(AdminDashboardViewModel viewModel)
+    public AdminDashboardView()
     {
-        ViewModel = viewModel;
+        ViewModel = App.Services.GetRequiredService<AdminDashboardViewModel>();
         DataContext = ViewModel;
         InitializeComponent();
 

@@ -55,32 +55,9 @@ public class NavigationService : INavigationService
             _navigationParameters.Remove(pageType);
         }
 
-        // Get the page instance from DI container (creates new scope for transient)
-        using var scope = App.Services.CreateScope();
-        var page = scope.ServiceProvider.GetService(pageType);
-
-        if (page == null)
-        {
-            System.Diagnostics.Debug.WriteLine($"ERROR: Page {pageType.Name} not found in DI container!");
-            throw new InvalidOperationException($"Page {pageType.Name} is not registered in the DI container.");
-        }
-
-        System.Diagnostics.Debug.WriteLine($"Page instance created: {page.GetType().Name}");
-
-        // If the page's DataContext has an Initialize method, call it with parameters
-        if (page is FrameworkElement element && element.DataContext != null)
-        {
-            var dataContext = element.DataContext;
-            var initializeMethod = dataContext.GetType().GetMethod("Initialize");
-            if (initializeMethod != null && parameters != null)
-            {
-                System.Diagnostics.Debug.WriteLine("Calling Initialize method on DataContext");
-                initializeMethod.Invoke(dataContext, new object[] { parameters });
-            }
-        }
-
-        _frame.Content = page;
-        System.Diagnostics.Debug.WriteLine("Navigation complete - frame content set");
+        // Use Frame.Navigate to maintain back stack
+        _frame.Navigate(pageType);
+        System.Diagnostics.Debug.WriteLine("Navigation complete - frame navigated");
     }
 
     public void GoBack()

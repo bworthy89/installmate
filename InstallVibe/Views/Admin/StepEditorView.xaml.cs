@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
@@ -11,10 +12,10 @@ public sealed partial class StepEditorView : Page
     public StepEditorViewModel ViewModel { get; }
     private readonly INavigationService _navigationService;
 
-    public StepEditorView(StepEditorViewModel viewModel, INavigationService navigationService)
+    public StepEditorView()
     {
-        ViewModel = viewModel;
-        _navigationService = navigationService;
+        ViewModel = App.Services.GetRequiredService<StepEditorViewModel>();
+        _navigationService = App.Services.GetRequiredService<INavigationService>();
         DataContext = ViewModel;
         InitializeComponent();
 
