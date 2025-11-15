@@ -1,0 +1,300 @@
+<Page
+    x:Class="InstallVibe.Views.DiagnosticsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:InstallVibe.Views"
+    xmlns:viewmodels="using:InstallVibe.ViewModels"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Padding="24" Spacing="24" MaxWidth="1000">
+                <!-- Header -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="Diagnostics &amp; System Information"
+                        Style="{StaticResource TitleTextBlockStyle}"/>
+                    <TextBlock
+                        Text="View system diagnostics, logs, and troubleshooting information"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+
+                <!-- Actions -->
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button
+                        Content="Refresh"
+                        Command="{x:Bind ViewModel.RefreshDiagnosticsCommand}"
+                        Style="{StaticResource AccentButtonStyle}">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="F5"/>
+                        </Button.KeyboardAccelerators>
+                    </Button>
+                    <Button
+                        Content="Export Report"
+                        Command="{x:Bind ViewModel.ExportDiagnosticsCommand}">
+                        <Button.Icon>
+                            <FontIcon Glyph="&#xE74E;"/>
+                        </Button.Icon>
+                    </Button>
+                    <Button
+                        Content="Open Logs Folder"
+                        Command="{x:Bind ViewModel.OpenLogsFolderCommand}">
+                        <Button.Icon>
+                            <FontIcon Glyph="&#xE8DA;"/>
+                        </Button.Icon>
+                    </Button>
+                </StackPanel>
+
+                <!-- Loading Indicator -->
+                <ProgressRing
+                    IsActive="{x:Bind ViewModel.IsRefreshing, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.IsRefreshing, Mode=OneWay}"/>
+
+                <!-- Application Information -->
+                <StackPanel Spacing="12">
+                    <TextBlock
+                        Text="Application Information"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="200,*" RowSpacing="12">
+                            <!-- Version -->
+                            <TextBlock
+                                Grid.Row="0" Grid.Column="0"
+                                Text="Version:"
+                                FontWeight="SemiBold"/>
+                            <TextBlock
+                                Grid.Row="0" Grid.Column="1"
+                                Text="{x:Bind ViewModel.AppVersion, Mode=OneWay}"
+                                IsTextSelectionEnabled="True"/>
+
+                            <!-- OS Version -->
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="0"
+                                Text="Operating System:"
+                                FontWeight="SemiBold"/>
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="1"
+                                Text="{x:Bind ViewModel.OsVersion, Mode=OneWay}"
+                                TextWrapping="Wrap"
+                                IsTextSelectionEnabled="True"/>
+
+                            <!-- .NET Version -->
+                            <TextBlock
+                                Grid.Row="2" Grid.Column="0"
+                                Text=".NET Runtime:"
+                                FontWeight="SemiBold"/>
+                            <TextBlock
+                                Grid.Row="2" Grid.Column="1"
+                                Text="{x:Bind ViewModel.DotNetVersion, Mode=OneWay}"
+                                IsTextSelectionEnabled="True"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- Performance -->
+                <StackPanel Spacing="12">
+                    <TextBlock
+                        Text="Performance"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="200,*" RowSpacing="12">
+                            <!-- Memory Usage -->
+                            <TextBlock
+                                Grid.Row="0" Grid.Column="0"
+                                Text="Memory Usage:"
+                                FontWeight="SemiBold"/>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{x:Bind ViewModel.MemoryUsageMB, Mode=OneWay}"/>
+                                <TextBlock Text="MB"/>
+                            </StackPanel>
+
+                            <!-- Database Size -->
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="0"
+                                Text="Database Size:"
+                                FontWeight="SemiBold"/>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{x:Bind ViewModel.DatabaseSizeMB, Mode=OneWay}"/>
+                                <TextBlock Text="MB"/>
+                            </StackPanel>
+
+                            <!-- Log File Size -->
+                            <TextBlock
+                                Grid.Row="2" Grid.Column="0"
+                                Text="Log File Size:"
+                                FontWeight="SemiBold"/>
+                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="{x:Bind ViewModel.LogFileSizeMB, Mode=OneWay}"/>
+                                <TextBlock Text="MB"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- Paths -->
+                <StackPanel Spacing="12">
+                    <TextBlock
+                        Text="File Locations"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="200,*" RowSpacing="12">
+                            <!-- Database Path -->
+                            <TextBlock
+                                Grid.Row="0" Grid.Column="0"
+                                Text="Database:"
+                                FontWeight="SemiBold"/>
+                            <TextBlock
+                                Grid.Row="0" Grid.Column="1"
+                                Text="{x:Bind ViewModel.DatabasePath, Mode=OneWay}"
+                                TextWrapping="Wrap"
+                                IsTextSelectionEnabled="True"
+                                FontFamily="Consolas"/>
+
+                            <!-- Log Path -->
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="0"
+                                Text="Logs:"
+                                FontWeight="SemiBold"/>
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="1"
+                                Text="{x:Bind ViewModel.LogFilePath, Mode=OneWay}"
+                                TextWrapping="Wrap"
+                                IsTextSelectionEnabled="True"
+                                FontFamily="Consolas"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- System Status -->
+                <StackPanel Spacing="12">
+                    <TextBlock
+                        Text="System Status"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="200,*" RowSpacing="12">
+                            <!-- Network Status -->
+                            <TextBlock
+                                Grid.Row="0" Grid.Column="0"
+                                Text="Network Connected:"
+                                FontWeight="SemiBold"/>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                <FontIcon
+                                    Glyph="{x:Bind ViewModel.IsNetworkConnected, Mode=OneWay, Converter={StaticResource BoolToNetworkIconConverter}}"
+                                    FontSize="16"
+                                    Foreground="{x:Bind ViewModel.IsNetworkConnected, Mode=OneWay, Converter={StaticResource BoolToColorConverter}}"/>
+                                <TextBlock Text="{x:Bind ViewModel.IsNetworkConnected, Mode=OneWay}"/>
+                            </StackPanel>
+
+                            <!-- Last Update Check -->
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="0"
+                                Text="Last Update Check:"
+                                FontWeight="SemiBold"/>
+                            <TextBlock
+                                Grid.Row="1" Grid.Column="1"
+                                Text="{x:Bind ViewModel.LastUpdateCheck, Mode=OneWay}"/>
+
+                            <!-- Total Guides -->
+                            <TextBlock
+                                Grid.Row="2" Grid.Column="0"
+                                Text="Total Guides:"
+                                FontWeight="SemiBold"/>
+                            <TextBlock
+                                Grid.Row="2" Grid.Column="1"
+                                Text="{x:Bind ViewModel.TotalGuides, Mode=OneWay}"/>
+
+                            <!-- Total Steps -->
+                            <TextBlock
+                                Grid.Row="3" Grid.Column="0"
+                                Text="Total Steps:"
+                                FontWeight="SemiBold"/>
+                            <TextBlock
+                                Grid.Row="3" Grid.Column="1"
+                                Text="{x:Bind ViewModel.TotalSteps, Mode=OneWay}"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- Recent Logs -->
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock
+                            Text="Recent Logs"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            VerticalAlignment="Center"/>
+                        <Button
+                            Content="Clear Logs"
+                            Command="{x:Bind ViewModel.ClearLogsCommand}"
+                            Style="{StaticResource TextButtonStyle}"/>
+                    </StackPanel>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <ListView
+                            ItemsSource="{x:Bind ViewModel.RecentLogs, Mode=OneWay}"
+                            MaxHeight="400"
+                            SelectionMode="None">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="viewmodels:LogEntry">
+                                    <Grid ColumnDefinitions="160,80,*" ColumnSpacing="12" Padding="4">
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Text="{x:Bind Timestamp, Converter={StaticResource DateTimeToStringConverter}}"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            FontFamily="Consolas"/>
+                                        <Border
+                                            Grid.Column="1"
+                                            Background="{x:Bind Level, Converter={StaticResource LogLevelToColorConverter}}"
+                                            CornerRadius="4"
+                                            Padding="6,2">
+                                            <TextBlock
+                                                Text="{x:Bind Level}"
+                                                Style="{StaticResource CaptionTextBlockStyle}"
+                                                Foreground="White"
+                                                HorizontalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Text="{x:Bind Message}"
+                                            TextWrapping="Wrap"
+                                            FontFamily="Consolas"
+                                            Style="{StaticResource CaptionTextBlockStyle}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Border>
+                </StackPanel>
+
+                <!-- Maintenance Actions -->
+                <StackPanel Spacing="12">
+                    <TextBlock
+                        Text="Maintenance"
+                        Style="{StaticResource SubtitleTextBlockStyle}"/>
+
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="12">
+                            <Button
+                                Content="Clear Cache"
+                                Command="{x:Bind ViewModel.ClearCacheCommand}"
+                                HorizontalAlignment="Left">
+                                <Button.Icon>
+                                    <FontIcon Glyph="&#xE74D;"/>
+                                </Button.Icon>
+                            </Button>
+
+                            <TextBlock
+                                Text="Clears temporary files and cached data to free up disk space."
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
