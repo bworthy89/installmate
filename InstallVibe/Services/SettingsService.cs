@@ -25,7 +25,11 @@ public class SettingsService : ISettingsService
     public string FontSize
     {
         get => _settings.FontSize;
-        set => _settings.FontSize = value;
+        set
+        {
+            _settings.FontSize = value;
+            ApplyFontSize(value);
+        }
     }
 
     public bool TelemetryEnabled
@@ -58,6 +62,7 @@ public class SettingsService : ISettingsService
                 var json = await File.ReadAllTextAsync(_settingsPath);
                 _settings = JsonSerializer.Deserialize<Settings>(json) ?? _settings;
                 ApplyTheme(_settings.Theme);
+                ApplyFontSize(_settings.FontSize);
             }
         }
         catch
@@ -113,6 +118,30 @@ public class SettingsService : ISettingsService
         if (App.MainWindow?.Content is FrameworkElement rootElement)
         {
             rootElement.RequestedTheme = theme;
+        }
+    }
+
+    private void ApplyFontSize(string fontSize)
+    {
+        if (App.MainWindow?.Content is FrameworkElement rootElement)
+        {
+            // Apply content scale to the root element for text scaling
+            double scale = fontSize switch
+            {
+                "Small" => 0.9,
+                "Normal" => 1.0,
+                "Large" => 1.1,
+                _ => 1.0
+            };
+
+            // Apply scale transform to root element
+            rootElement.RenderTransform = new Microsoft.UI.Xaml.Media.ScaleTransform
+            {
+                ScaleX = scale,
+                ScaleY = scale,
+                CenterX = 0,
+                CenterY = 0
+            };
         }
     }
 

@@ -90,7 +90,7 @@ public partial class SettingsViewModel : ObservableObject
 
         _settingsService.FontSize = fontSize;
         _ = _settingsService.SaveSettingsAsync();
-        StatusMessage = "Font size will take effect after app restart";
+        StatusMessage = "Font size updated";
     }
 
     partial void OnTelemetryEnabledChanged(bool value)
