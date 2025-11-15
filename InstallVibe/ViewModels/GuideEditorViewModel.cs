@@ -222,13 +222,46 @@ public partial class GuideEditorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void EditStep(StepEditorItem step)
+    private async Task EditStep(StepEditorItem step)
     {
-        // Navigate to step editor view
-        if (step.Id > 0)
+        // If this is a new step (Id = 0), we need to save the guide first to create the step in DB
+        if (step.Id == 0)
         {
-            _navigationService.NavigateToStepEditor(step.Id);
+            // Check if guide exists
+            if (!_guideId.HasValue)
+            {
+                ErrorMessage = "Please save the guide first before editing steps.";
+                return;
+            }
+
+            // Create the step in the database
+            try
+            {
+                using var scope = App.Services.CreateScope();
+                var repository = scope.ServiceProvider.GetRequiredService<IGuideRepository>();
+
+                var newStep = new Step
+                {
+                    GuideId = _guideId.Value,
+                    StepNumber = step.StepNumber,
+                    Title = step.Title,
+                    Instruction = step.Instruction,
+                    RequiredTools = step.RequiredTools,
+                    SafetyNotes = step.SafetyNotes
+                };
+
+                var stepId = await repository.CreateStep(_guideId.Value, newStep);
+                step.Id = stepId; // Update the step with the new ID
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error creating step: {ex.Message}";
+                return;
+            }
         }
+
+        // Navigate to step editor view
+        _navigationService.NavigateToStepEditor(step.Id);
     }
 
     [RelayCommand]
@@ -307,7 +340,8 @@ public partial class GuideEditorViewModel : ObservableObject
                             RequiredTools = stepItem.RequiredTools,
                             SafetyNotes = stepItem.SafetyNotes
                         };
-                        await repository.CreateStep(_guide.Id, newStep);
+                        var stepId = await repository.CreateStep(_guide.Id, newStep);
+                        stepItem.Id = stepId; // Update the step item with the new ID
                     }
                 }
 
@@ -337,6 +371,15 @@ public partial class GuideEditorViewModel : ObservableObject
                 _guideId = guideId;
                 _guide = newGuide;
                 PageTitle = "Edit Guide";
+
+                // Update step IDs in the UI collection
+                for (int i = 0; i < Steps.Count; i++)
+                {
+                    if (i < newGuide.Steps.Count)
+                    {
+                        Steps[i].Id = newGuide.Steps[i].Id;
+                    }
+                }
 
                 ErrorMessage = "Guide created successfully!";
             }
