@@ -19,7 +19,7 @@ public class FeedbackSubmission
 
     public FeedbackType FeedbackType { get; set; }
 
-    public int? Rating { get; set; } // 1-5 stars
+    public double? Rating { get; set; } // 1-5 stars
 
     public FeedbackCategory Category { get; set; }
 

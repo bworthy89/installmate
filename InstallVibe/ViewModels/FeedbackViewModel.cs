@@ -24,7 +24,7 @@ public partial class FeedbackViewModel : ObservableObject
     private IssueSeverity selectedSeverity = IssueSeverity.Medium;
 
     [ObservableProperty]
-    private int? rating;
+    private double? rating;
 
     [ObservableProperty]
     private string subject = string.Empty;
