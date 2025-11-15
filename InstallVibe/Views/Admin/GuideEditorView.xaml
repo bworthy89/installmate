@@ -8,6 +8,7 @@
 
     <Page.Resources>
         <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Page.Resources>
 
     <Grid>
@@ -37,13 +38,13 @@
                     Background="{ThemeResource SystemFillColorCautionBrush}"
                     CornerRadius="4"
                     Padding="8,4"
-                    Visibility="{x:Bind ViewModel.HasUnsavedChanges, Mode=OneWay}">
+                    Visibility="{x:Bind ViewModel.HasUnsavedChanges, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock Text="Unsaved Changes" FontSize="12" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
                 </Border>
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12">
-                <Button Command="{x:Bind ViewModel.DeleteGuideCommand}" Click="DeleteGuideButton_Click" Visibility="{x:Bind ViewModel.IsExistingGuide, Mode=OneWay}">
+                <Button Command="{x:Bind ViewModel.DeleteGuideCommand}" Click="DeleteGuideButton_Click" Visibility="{x:Bind ViewModel.IsExistingGuide, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xE74D;" FontSize="16" />
                         <TextBlock Text="Delete Guide" />
@@ -62,7 +63,7 @@
         <ScrollViewer Grid.Row="1" Padding="24">
             <StackPanel Spacing="24" MaxWidth="1200">
                 <!-- Loading Indicator -->
-                <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" Width="40" Height="40" HorizontalAlignment="Center" Margin="0,32,0,0" Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+                <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" Width="40" Height="40" HorizontalAlignment="Center" Margin="0,32,0,0" Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                 <!-- Error/Success Message -->
                 <InfoBar
@@ -118,7 +119,7 @@
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 HorizontalAlignment="Center"
                                 Margin="0,32,0,32"
-                                Visibility="{x:Bind ViewModel.HasNoSteps, Mode=OneWay}" />
+                                Visibility="{x:Bind ViewModel.HasNoSteps, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                             <ItemsRepeater ItemsSource="{x:Bind ViewModel.Steps, Mode=OneWay}">
                                 <ItemsRepeater.ItemTemplate>
