@@ -2,19 +2,25 @@ using Xunit;
 using Moq;
 using FluentAssertions;
 using InstallVibe.Services;
+using Microsoft.Extensions.Logging;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace InstallVibe.Tests.Services;
 
 public class UpdateServiceTests
 {
+    private readonly Mock<ILogger<UpdateService>> _mockLogger;
     private readonly Mock<INetworkService> _mockNetworkService;
+    private readonly HttpClient _httpClient;
     private readonly UpdateService _updateService;
 
     public UpdateServiceTests()
     {
+        _mockLogger = new Mock<ILogger<UpdateService>>();
         _mockNetworkService = new Mock<INetworkService>();
-        _updateService = new UpdateService(_mockNetworkService.Object);
+        _httpClient = new HttpClient();
+        _updateService = new UpdateService(_mockLogger.Object, _mockNetworkService.Object, _httpClient);
     }
 
     [Fact]
@@ -53,6 +59,27 @@ public class UpdateServiceTests
         // Assert
         version.Should().NotBeNull();
         version.Major.Should().BeGreaterThanOrEqualTo(0);
+    }
+
+    [Fact]
+    public void IsCheckingForUpdates_InitiallyFalse()
+    {
+        // Assert
+        _updateService.IsCheckingForUpdates.Should().BeFalse();
+    }
+
+    [Fact]
+    public void IsUpdateAvailable_InitiallyFalse()
+    {
+        // Assert
+        _updateService.IsUpdateAvailable.Should().BeFalse();
+    }
+
+    [Fact]
+    public void IsMandatoryUpdate_InitiallyFalse()
+    {
+        // Assert
+        _updateService.IsMandatoryUpdate.Should().BeFalse();
     }
 
     [Theory]

@@ -26,7 +26,7 @@ public class GuideLibraryViewModelTests
         {
             Id = 1,
             Username = "testuser",
-            IsAdmin = false
+            Role = UserRole.Technician
         });
         _mockAuthService.Setup(x => x.IsAdmin()).Returns(false);
 

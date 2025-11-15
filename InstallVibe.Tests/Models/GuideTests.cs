@@ -88,7 +88,7 @@ public class GuideTests
     }
 
     [Fact]
-    public void Step_InitializesWithDefaults()
+    public void Step_DefaultConstructor_InitializesWithDefaults()
     {
         // Act
         var step = new Step();
@@ -96,8 +96,28 @@ public class GuideTests
         // Assert
         step.Id.Should().Be(0);
         step.StepNumber.Should().Be(0);
-        step.Title.Should().BeNullOrEmpty();
-        step.Instruction.Should().BeNullOrEmpty();
+        step.Title.Should().Be(string.Empty);
+        step.Instruction.Should().Be(string.Empty);
+    }
+
+    [Fact]
+    public void Step_ParameterizedConstructor_SetsPropertiesCorrectly()
+    {
+        // Arrange & Act
+        var step = new Step(
+            id: 1,
+            guideId: 5,
+            stepNumber: 3,
+            title: "Align motor shaft",
+            instruction: "Use alignment tool to center shaft"
+        );
+
+        // Assert
+        step.Id.Should().Be(1);
+        step.GuideId.Should().Be(5);
+        step.StepNumber.Should().Be(3);
+        step.Title.Should().Be("Align motor shaft");
+        step.Instruction.Should().Be("Use alignment tool to center shaft");
     }
 
     [Fact]
@@ -112,8 +132,7 @@ public class GuideTests
             Title = "Align motor shaft",
             Instruction = "Use alignment tool to center shaft",
             RequiredTools = "Wrench, Alignment tool",
-            SafetyNotes = "Ensure power is disconnected",
-            EstimatedDurationMinutes = 10
+            SafetyNotes = "Ensure power is disconnected"
         };
 
         // Assert
@@ -124,6 +143,26 @@ public class GuideTests
         step.Instruction.Should().Be("Use alignment tool to center shaft");
         step.RequiredTools.Should().Be("Wrench, Alignment tool");
         step.SafetyNotes.Should().Be("Ensure power is disconnected");
-        step.EstimatedDurationMinutes.Should().Be(10);
+    }
+
+    [Fact]
+    public void Step_Media_CanBeAdded()
+    {
+        // Arrange
+        var step = new Step();
+        var mediaItem = new MediaItem
+        {
+            Id = 1,
+            StepId = step.Id,
+            Type = MediaType.Image,
+            Url = "image1.png"
+        };
+
+        // Act
+        step.Media.Add(mediaItem);
+
+        // Assert
+        step.Media.Should().HaveCount(1);
+        step.Media.Should().Contain(mediaItem);
     }
 }

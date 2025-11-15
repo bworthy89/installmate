@@ -1,17 +1,24 @@
 using Xunit;
 using FluentAssertions;
 using InstallVibe.Services;
+using Microsoft.Extensions.Logging;
+using Moq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace InstallVibe.Tests.Services;
 
 public class NetworkServiceTests
 {
+    private readonly Mock<ILogger<NetworkService>> _mockLogger;
+    private readonly HttpClient _httpClient;
     private readonly NetworkService _networkService;
 
     public NetworkServiceTests()
     {
-        _networkService = new NetworkService();
+        _mockLogger = new Mock<ILogger<NetworkService>>();
+        _httpClient = new HttpClient();
+        _networkService = new NetworkService(_mockLogger.Object, _httpClient);
     }
 
     [Fact]
@@ -21,20 +28,59 @@ public class NetworkServiceTests
         var result = await _networkService.IsConnectedAsync();
 
         // Assert
-        result.Should().NotBeNull();
+        result.Should().BeOfType<bool>();
     }
 
     [Fact]
-    public void ConnectivityChanged_EventExists()
+    public void IsConnected_PropertyExists()
     {
-        // Arrange
-        var eventRaised = false;
-        _networkService.ConnectivityChanged += (s, e) => eventRaised = true;
-
-        // Act - Trigger would require network state change
+        // Act
+        var isConnected = _networkService.IsConnected;
 
         // Assert
-        // Event handler should be registered
-        _networkService.ConnectivityChanged.Should().NotBeNull();
+        isConnected.Should().BeOfType<bool>();
+    }
+
+    [Fact]
+    public void GetConnectionType_ReturnsConnectionType()
+    {
+        // Act
+        var connectionType = _networkService.GetConnectionType();
+
+        // Assert
+        connectionType.Should().BeOfType<NetworkConnectionType>();
+    }
+
+    [Fact]
+    public void StartMonitoring_DoesNotThrow()
+    {
+        // Act
+        var act = () => _networkService.StartMonitoring();
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void StopMonitoring_DoesNotThrow()
+    {
+        // Arrange
+        _networkService.StartMonitoring();
+
+        // Act
+        var act = () => _networkService.StopMonitoring();
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public async Task IsHostReachableAsync_ReturnsBoolean()
+    {
+        // Act
+        var result = await _networkService.IsHostReachableAsync("localhost");
+
+        // Assert
+        result.Should().BeOfType<bool>();
     }
 }
