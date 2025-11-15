@@ -21,8 +21,7 @@
                         StrokeDashArray="1 2"
                         RadiusX="4"
                         RadiusY="4"
-                        Margin="0"
-                        SnapsToDevicePixels="True" />
+                        Margin="0" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
