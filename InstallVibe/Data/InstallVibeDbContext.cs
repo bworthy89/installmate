@@ -13,6 +13,7 @@ public class InstallVibeDbContext : DbContext
     public DbSet<Step> Steps { get; set; } = null!;
     public DbSet<MediaItem> MediaItems { get; set; } = null!;
     public DbSet<GuideProgress> GuideProgresses { get; set; } = null!;
+    public DbSet<FeedbackSubmission> Feedback { get; set; } = null!;
 
     public InstallVibeDbContext(DbContextOptions<InstallVibeDbContext> options)
         : base(options)
@@ -120,6 +121,33 @@ public class InstallVibeDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // FeedbackSubmission configuration
+        modelBuilder.Entity<FeedbackSubmission>(entity =>
+        {
+            entity.ToTable("Feedback");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.UserEmail).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Subject).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).IsRequired().HasMaxLength(2000);
+            entity.Property(e => e.StepsToReproduce).HasMaxLength(1000);
+            entity.Property(e => e.ExpectedBehavior).HasMaxLength(500);
+            entity.Property(e => e.ActualBehavior).HasMaxLength(500);
+            entity.Property(e => e.AppVersion).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.DeviceInfo).HasMaxLength(500);
+            entity.Property(e => e.ScreenshotPath).HasMaxLength(500);
+            entity.Property(e => e.AdminNotes).HasMaxLength(1000);
+            entity.Property(e => e.GuideName).HasMaxLength(200);
+            entity.Property(e => e.SubmittedAt).IsRequired();
+            entity.Property(e => e.FeedbackType).IsRequired();
+            entity.Property(e => e.Category).IsRequired();
+            entity.Property(e => e.Severity).IsRequired();
+            entity.Property(e => e.Status).IsRequired();
+
+            entity.HasIndex(e => e.Status);
+            entity.HasIndex(e => e.SubmittedAt);
         });
 
         // Seed data
