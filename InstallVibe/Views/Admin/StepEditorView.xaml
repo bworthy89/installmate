@@ -9,6 +9,7 @@
     <Page.Resources>
         <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:EmptyStringToBoolConverter x:Key="EmptyStringToBoolConverter" />
     </Page.Resources>
 
     <Grid>
@@ -62,7 +63,7 @@
 
                 <!-- Error/Success Message -->
                 <InfoBar
-                    IsOpen="{x:Bind ViewModel.ErrorMessage, Converter={StaticResource EmptyStringToVisibilityConverter}, Mode=OneWay}"
+                    IsOpen="{x:Bind ViewModel.ErrorMessage, Converter={StaticResource EmptyStringToBoolConverter}, Mode=OneWay}"
                     Severity="Warning"
                     Title="Message"
                     Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
