@@ -117,17 +117,7 @@
                                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                         BorderThickness="1"
-                                        CornerRadius="4"
-                                        AccessKey="Left,Right,Space">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                                                <Style.Triggers>
-                                                    <!-- Selected state would be set via IsSelected property -->
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-
+                                        CornerRadius="4">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
@@ -320,8 +310,7 @@
                             HorizontalAlignment="Stretch"
                             Padding="24,12"
                             FontSize="16"
-                            MinWidth="200"
-                            AccessKey="Space">
+                            MinWidth="200">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon Glyph="&#xE73E;" FontSize="16" />
                                 <TextBlock Text="{x:Bind ViewModel.CurrentStep.IsCompleted, Converter={StaticResource BoolToCompleteTextConverter}, Mode=OneWay}" />
@@ -356,8 +345,7 @@
                             Grid.Column="0"
                             Command="{x:Bind ViewModel.PreviousStepCommand}"
                             HorizontalAlignment="Left"
-                            Padding="16,10"
-                            AccessKey="Left">
+                            Padding="16,10">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon Glyph="&#xE76B;" FontSize="16" />
                                 <TextBlock Text="Previous Step" />
@@ -369,8 +357,7 @@
                             Command="{x:Bind ViewModel.NextStepCommand}"
                             HorizontalAlignment="Right"
                             Style="{StaticResource AccentButtonStyle}"
-                            Padding="16,10"
-                            AccessKey="Right">
+                            Padding="16,10">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <TextBlock Text="Next Step" />
                                 <FontIcon Glyph="&#xE76C;" FontSize="16" />
