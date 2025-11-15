@@ -67,7 +67,15 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
 
     private void UpdateAdminVisibility()
     {
-        AdminMenuItem.Visibility = _authService.IsAdmin() ? Visibility.Visible : Visibility.Collapsed;
+        try
+        {
+            AdminMenuItem.Visibility = _authService.IsAdmin() ? Visibility.Visible : Visibility.Collapsed;
+        }
+        catch
+        {
+            // Hide admin menu if there's any error checking admin status (e.g., no user logged in yet)
+            AdminMenuItem.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void OnNavigated(object sender, NavigationEventArgs e)
@@ -89,9 +97,13 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
                 "StepEditorView" => "Step Editor",
                 "SettingsView" => "Settings",
                 "HomeView" => "Home",
+                "LoginView" => "Login",
                 _ => "InstallVibe"
             };
         }
+
+        // Update admin menu visibility (in case user just logged in/out)
+        UpdateAdminVisibility();
 
         // Update selected navigation item
         UpdateNavigationSelection();
@@ -99,46 +111,54 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
 
     private void UpdateNavigationSelection()
     {
-        var currentPage = ContentFrame.Content?.GetType().Name;
+        try
+        {
+            var currentPage = ContentFrame.Content?.GetType().Name;
 
-        // First, deselect all menu items
-        foreach (var item in NavView.MenuItems)
-        {
-            if (item is NavigationViewItem navItem)
-            {
-                navItem.IsSelected = false;
-            }
-        }
-
-        // Then select the appropriate item based on current page
-        if (currentPage == "SettingsView")
-        {
-            NavView.SelectedItem = NavView.SettingsItem;
-        }
-        else
-        {
+            // First, deselect all menu items
             foreach (var item in NavView.MenuItems)
             {
                 if (item is NavigationViewItem navItem)
                 {
-                    var tag = navItem.Tag?.ToString();
-                    var shouldSelect = tag switch
-                    {
-                        "GuideLibrary" => currentPage == "GuideLibraryView" || currentPage == "GuideDetailView",
-                        "AdminDashboard" => currentPage == "AdminDashboardView" ||
-                                           currentPage == "GuideEditorView" ||
-                                           currentPage == "StepEditorView",
-                        _ => false
-                    };
+                    navItem.IsSelected = false;
+                }
+            }
 
-                    if (shouldSelect)
+            // Then select the appropriate item based on current page
+            if (currentPage == "SettingsView")
+            {
+                NavView.SelectedItem = NavView.SettingsItem;
+            }
+            else
+            {
+                foreach (var item in NavView.MenuItems)
+                {
+                    if (item is NavigationViewItem navItem)
                     {
-                        navItem.IsSelected = true;
-                        NavView.SelectedItem = navItem;
-                        break;
+                        var tag = navItem.Tag?.ToString();
+                        var shouldSelect = tag switch
+                        {
+                            "GuideLibrary" => currentPage == "GuideLibraryView" || currentPage == "GuideDetailView",
+                            "AdminDashboard" => currentPage == "AdminDashboardView" ||
+                                               currentPage == "GuideEditorView" ||
+                                               currentPage == "StepEditorView",
+                            _ => false
+                        };
+
+                        if (shouldSelect)
+                        {
+                            navItem.IsSelected = true;
+                            NavView.SelectedItem = navItem;
+                            break;
+                        }
                     }
                 }
             }
+        }
+        catch
+        {
+            // Silently fail if navigation selection update fails
+            // This prevents navigation from breaking if there's a UI issue
         }
     }
 
