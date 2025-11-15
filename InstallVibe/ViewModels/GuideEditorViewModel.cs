@@ -72,6 +72,9 @@ public partial class GuideEditorViewModel : ObservableObject
             "Plumbing",
             "Carpentry",
             "Automotive",
+            "Appliances",
+            "Security",
+            "Networking",
             "General"
         };
     }

@@ -91,16 +91,9 @@
                             <StackPanel Spacing="8">
                                 <TextBlock Text="Category *" FontWeight="SemiBold" />
                                 <ComboBox
+                                    ItemsSource="{x:Bind ViewModel.Categories}"
                                     SelectedItem="{x:Bind ViewModel.Category, Mode=TwoWay}"
-                                    HorizontalAlignment="Stretch">
-                                    <ComboBoxItem Content="Electrical" />
-                                    <ComboBoxItem Content="Plumbing" />
-                                    <ComboBoxItem Content="HVAC" />
-                                    <ComboBoxItem Content="Appliances" />
-                                    <ComboBoxItem Content="Security" />
-                                    <ComboBoxItem Content="Networking" />
-                                    <ComboBoxItem Content="General" />
-                                </ComboBox>
+                                    HorizontalAlignment="Stretch" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
