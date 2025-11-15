@@ -24,7 +24,7 @@ public partial class FeedbackViewModel : ObservableObject
     private IssueSeverity selectedSeverity = IssueSeverity.Medium;
 
     [ObservableProperty]
-    private double? rating;
+    private double rating = 0;
 
     [ObservableProperty]
     private string subject = string.Empty;
@@ -92,7 +92,7 @@ public partial class FeedbackViewModel : ObservableObject
                 Category = SelectedCategory,
                 Subject = Subject,
                 Description = Description,
-                Rating = Rating,
+                Rating = Rating > 0 ? Rating : null, // Convert 0 to null (no rating)
                 Severity = SelectedSeverity,
                 StepsToReproduce = StepsToReproduce,
                 ExpectedBehavior = ExpectedBehavior,
@@ -130,7 +130,7 @@ public partial class FeedbackViewModel : ObservableObject
         StepsToReproduce = null;
         ExpectedBehavior = null;
         ActualBehavior = null;
-        Rating = null;
+        Rating = 0;
         SelectedFeedbackType = FeedbackType.General;
         SelectedCategory = FeedbackCategory.Other;
         SelectedSeverity = IssueSeverity.Medium;
