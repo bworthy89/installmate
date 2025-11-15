@@ -89,7 +89,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="4">
                                 <FontIcon Glyph="&#xE917;" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
                                 <TextBlock
-                                    Text="{Binding EstimatedMinutes, StringFormat='{0} min'}"
+                                    Text="{Binding EstimatedMinutes, StringFormat={}{0} min}"
                                     Style="{StaticResource CaptionTextStyle}" />
                             </StackPanel>
 
