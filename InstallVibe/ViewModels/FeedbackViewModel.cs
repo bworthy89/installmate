@@ -83,11 +83,11 @@ public partial class FeedbackViewModel : ObservableObject
 
         try
         {
-            var currentUser = _authService.CurrentUser;
+            var currentUser = _authService.GetCurrentUser();
             var feedback = new FeedbackSubmission
             {
-                UserId = currentUser?.Id ?? "unknown",
-                UserEmail = currentUser?.Email ?? string.Empty,
+                UserId = currentUser?.Id.ToString() ?? "unknown",
+                UserEmail = currentUser?.Username ?? string.Empty,
                 FeedbackType = SelectedFeedbackType,
                 Category = SelectedCategory,
                 Subject = Subject,
