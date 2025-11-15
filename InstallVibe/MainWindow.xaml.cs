@@ -267,7 +267,7 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         // Ctrl+Comma: Open Settings
         var settingsAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
         {
-            Key = Windows.System.VirtualKey.Comma,
+            Key = (Windows.System.VirtualKey)188, // VK_OEM_COMMA
             Modifiers = Windows.System.VirtualKeyModifiers.Control
         };
         settingsAccelerator.Invoked += (sender, args) =>
