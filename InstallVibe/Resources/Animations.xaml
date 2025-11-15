@@ -214,12 +214,10 @@
             Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
             From="0"
             To="360"
-            Duration="0:0:1.5">
-            <DoubleAnimation.EasingFunction>
-                <LinearEase />
-            </DoubleAnimation.EasingFunction>
-        </DoubleAnimation>
+            Duration="0:0:1.5"
+            RepeatBehavior="Forever" />
     </Storyboard>
+
 
     <!-- Success Flash Animation -->
     <!-- Brief green flash for successful operations -->
