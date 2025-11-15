@@ -67,6 +67,7 @@ public partial class App : Application
         services.AddTransient<GuideLibraryViewModel>();
         services.AddTransient<GuideDetailViewModel>();
         services.AddTransient<StepViewerViewModel>();
+        services.AddTransient<GuideViewerViewModel>();
 
         // Views
         services.AddTransient<LoginView>();
@@ -74,6 +75,7 @@ public partial class App : Application
         services.AddTransient<GuideLibraryView>();
         services.AddTransient<GuideDetailView>();
         services.AddTransient<StepViewerView>();
+        services.AddTransient<GuideViewerView>();
 
         // Main Window
         services.AddSingleton<MainWindow>();

@@ -12,6 +12,7 @@
             <!-- Converters -->
             <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter" />
             <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+            <converters:BoolToCompleteTextConverter x:Key="BoolToCompleteTextConverter" />
 
             <!-- Button Styles -->
             <Style x:Key="AccentButtonStyle" TargetType="Button">

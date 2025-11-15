@@ -1,0 +1,423 @@
+<Page
+    x:Class="InstallVibe.Views.GuideViewerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:InstallVibe.ViewModels"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <!-- Converters -->
+        <converters:EmptyStringToVisibilityConverter xmlns:converters="using:InstallVibe.Converters" x:Key="EmptyStringToVisibilityConverter" />
+
+        <!-- Animations -->
+        <Storyboard x:Name="StepTransitionStoryboard">
+            <DoubleAnimation
+                Storyboard.TargetName="StepDetailPanel"
+                Storyboard.TargetProperty="Opacity"
+                From="0.0"
+                To="1.0"
+                Duration="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid
+            Grid.Row="0"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            Padding="24,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Column="0"
+                Command="{x:Bind ViewModel.GoBackCommand}"
+                Style="{StaticResource SubtleButtonStyle}"
+                Margin="0,0,16,0">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE72B;" FontSize="16" />
+                    <TextBlock Text="Back" />
+                </StackPanel>
+            </Button>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock
+                    Text="{x:Bind ViewModel.GuideTitle, Mode=OneWay}"
+                    FontSize="24"
+                    FontWeight="SemiBold" />
+                <TextBlock
+                    Text="{x:Bind ViewModel.GuideDescription, Mode=OneWay}"
+                    FontSize="14"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Margin="0,4,0,0" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Content: Split View -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Panel: Steps List -->
+            <Border
+                Grid.Column="0"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Steps Header -->
+                    <Border
+                        Grid.Row="0"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        Padding="16,12"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="0,0,0,1">
+                        <TextBlock
+                            Text="Steps"
+                            FontSize="16"
+                            FontWeight="SemiBold" />
+                    </Border>
+
+                    <!-- Steps List -->
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsRepeater
+                            ItemsSource="{x:Bind ViewModel.Steps, Mode=OneWay}"
+                            Margin="8">
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate x:DataType="vm:StepViewModel">
+                                    <Button
+                                        Click="StepButton_Click"
+                                        Tag="{x:Bind Index}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Padding="12"
+                                        Margin="0,0,0,8"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        AccessKey="Left,Right,Space">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                                                <Style.Triggers>
+                                                    <!-- Selected state would be set via IsSelected property -->
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Step Number -->
+                                            <Border
+                                                Grid.Column="0"
+                                                Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                                CornerRadius="12"
+                                                Width="24"
+                                                Height="24"
+                                                Margin="0,0,12,0">
+                                                <TextBlock
+                                                    Text="{x:Bind StepNumber}"
+                                                    Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                                    FontSize="12"
+                                                    FontWeight="SemiBold"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" />
+                                            </Border>
+
+                                            <!-- Step Title -->
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Text="{x:Bind Title}"
+                                                FontSize="14"
+                                                TextWrapping="Wrap"
+                                                VerticalAlignment="Center" />
+
+                                            <!-- Completion Icon -->
+                                            <FontIcon
+                                                Grid.Column="2"
+                                                Glyph="{x:Bind CompletionIcon, Mode=OneWay}"
+                                                FontSize="16"
+                                                Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                                Margin="8,0,0,0" />
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Right Panel: Step Detail -->
+            <ScrollViewer Grid.Column="1" Padding="32">
+                <StackPanel x:Name="StepDetailPanel" Spacing="24" MaxWidth="900">
+                    <!-- Loading Indicator -->
+                    <ProgressRing
+                        IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                        Width="40"
+                        Height="40"
+                        HorizontalAlignment="Center"
+                        Margin="0,64,0,0"
+                        Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+
+                    <!-- Error Message -->
+                    <InfoBar
+                        IsOpen="{x:Bind ViewModel.ErrorMessage, Converter={StaticResource EmptyStringToVisibilityConverter}, Mode=OneWay}"
+                        Severity="Error"
+                        Title="Error"
+                        Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                        IsClosable="True" />
+
+                    <!-- Completion Banner -->
+                    <Border
+                        Background="{ThemeResource SystemFillColorSuccessBrush}"
+                        CornerRadius="8"
+                        Padding="16"
+                        Visibility="{x:Bind ViewModel.IsAllCompleted, Mode=OneWay}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon
+                                    Glyph="&#xE73E;"
+                                    FontSize="24"
+                                    Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                                <TextBlock
+                                    Text="Guide Completed!"
+                                    FontSize="18"
+                                    FontWeight="SemiBold"
+                                    Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                    VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock
+                                Text="You've completed all steps in this guide. Great work!"
+                                Foreground="{ThemeResource TextOnAccentFillColorSecondaryBrush}"
+                                TextWrapping="Wrap" />
+                            <Button
+                                Content="Finish"
+                                Command="{x:Bind ViewModel.FinishGuideCommand}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Step Header (when step is loaded) -->
+                    <StackPanel Spacing="8" Visibility="{x:Bind ViewModel.CurrentStep, Converter={StaticResource EmptyStringToVisibilityConverter}, Mode=OneWay}">
+                        <TextBlock
+                            Text="{x:Bind ViewModel.CurrentStep.StepNumberText, Mode=OneWay}"
+                            FontSize="16"
+                            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+
+                        <TextBlock
+                            Text="{x:Bind ViewModel.CurrentStep.Title, Mode=OneWay}"
+                            FontSize="32"
+                            FontWeight="SemiBold"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- Safety Notes -->
+                    <Border
+                        Background="#FFFEF5E7"
+                        BorderBrush="#FFD95C00"
+                        BorderThickness="2"
+                        CornerRadius="8"
+                        Padding="16"
+                        Visibility="{x:Bind ViewModel.CurrentStep.SafetyNotes, Converter={StaticResource EmptyStringToVisibilityConverter}, Mode=OneWay}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon
+                                    Glyph="&#xE7BA;"
+                                    FontSize="18"
+                                    Foreground="#FFD95C00" />
+                                <TextBlock
+                                    Text="Safety Notes"
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Foreground="#FFD95C00" />
+                            </StackPanel>
+                            <TextBlock
+                                Text="{x:Bind ViewModel.CurrentStep.SafetyNotes, Mode=OneWay}"
+                                TextWrapping="Wrap"
+                                FontSize="14"
+                                Foreground="#FF8B4000" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Instructions -->
+                    <StackPanel Spacing="12">
+                        <TextBlock
+                            Text="Instructions"
+                            FontSize="18"
+                            FontWeight="SemiBold" />
+                        <Border
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            CornerRadius="8"
+                            Padding="20">
+                            <TextBlock
+                                Text="{x:Bind ViewModel.CurrentStep.Instruction, Mode=OneWay}"
+                                TextWrapping="Wrap"
+                                FontSize="15"
+                                LineHeight="24" />
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Required Tools -->
+                    <StackPanel
+                        Spacing="12"
+                        Visibility="{x:Bind ViewModel.CurrentStep.RequiredTools, Converter={StaticResource EmptyStringToVisibilityConverter}, Mode=OneWay}">
+                        <TextBlock
+                            Text="Required Tools"
+                            FontSize="18"
+                            FontWeight="SemiBold" />
+                        <Border
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            CornerRadius="8"
+                            Padding="20">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon
+                                    Glyph="&#xE90F;"
+                                    FontSize="18"
+                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                <TextBlock
+                                    Text="{x:Bind ViewModel.CurrentStep.RequiredTools, Mode=OneWay}"
+                                    TextWrapping="Wrap"
+                                    FontSize="14"
+                                    VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Action Buttons -->
+                    <StackPanel Spacing="12" Orientation="Horizontal">
+                        <Button
+                            Command="{x:Bind ViewModel.MarkStepCompleteCommand}"
+                            HorizontalAlignment="Stretch"
+                            Padding="24,12"
+                            FontSize="16"
+                            MinWidth="200"
+                            AccessKey="Space">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE73E;" FontSize="16" />
+                                <TextBlock Text="{x:Bind ViewModel.CurrentStep.IsCompleted, Converter={StaticResource BoolToCompleteTextConverter}, Mode=OneWay}" />
+                            </StackPanel>
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+                                    <Setter Property="Background" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button
+                            Command="{x:Bind ViewModel.ResetProgressCommand}"
+                            Click="ResetProgressButton_Click"
+                            Padding="16,12"
+                            FontSize="14">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE7A7;" FontSize="14" />
+                                <TextBlock Text="Reset Progress" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Navigation -->
+                    <Grid Margin="0,16,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            Command="{x:Bind ViewModel.PreviousStepCommand}"
+                            HorizontalAlignment="Left"
+                            Padding="16,10"
+                            AccessKey="Left">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE76B;" FontSize="16" />
+                                <TextBlock Text="Previous Step" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button
+                            Grid.Column="1"
+                            Command="{x:Bind ViewModel.NextStepCommand}"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Padding="16,10"
+                            AccessKey="Right">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="Next Step" />
+                                <FontIcon Glyph="&#xE76C;" FontSize="16" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Footer: Progress Bar -->
+        <Grid
+            Grid.Row="2"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            Padding="24,16"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="0,1,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                Text="Progress:"
+                FontSize="14"
+                FontWeight="SemiBold"
+                VerticalAlignment="Center"
+                Margin="0,0,16,0" />
+
+            <ProgressBar
+                Grid.Column="1"
+                Value="{x:Bind ViewModel.ProgressPercent, Mode=OneWay}"
+                Minimum="0"
+                Maximum="100"
+                Height="8"
+                VerticalAlignment="Center" />
+
+            <TextBlock
+                Grid.Column="2"
+                Text="{x:Bind ViewModel.ProgressText, Mode=OneWay}"
+                FontSize="14"
+                FontWeight="SemiBold"
+                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                VerticalAlignment="Center"
+                Margin="16,0,0,0" />
+        </Grid>
+    </Grid>
+</Page>

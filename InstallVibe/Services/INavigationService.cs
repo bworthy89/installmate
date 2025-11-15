@@ -22,4 +22,5 @@ public interface INavigationService
     void NavigateToGuideLibrary();
     void NavigateToGuideDetail(int guideId);
     void NavigateToStepViewer(int guideId, int stepIndex = 0);
+    void NavigateToGuideViewer(int guideId);
 }

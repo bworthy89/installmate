@@ -117,6 +117,16 @@ public class NavigationService : INavigationService
         NavigateTo<Views.StepViewerView>(parameters);
     }
 
+    public void NavigateToGuideViewer(int guideId)
+    {
+        System.Diagnostics.Debug.WriteLine($"NavigateToGuideViewer called with GuideId: {guideId}");
+        var parameters = new Dictionary<string, object>
+        {
+            { "GuideId", guideId }
+        };
+        NavigateTo<Views.GuideViewerView>(parameters);
+    }
+
     public Dictionary<string, object>? GetNavigationParameters(Type pageType)
     {
         return _navigationParameters.TryGetValue(pageType, out var parameters) ? parameters : null;
