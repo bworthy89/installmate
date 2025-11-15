@@ -1,3 +1,5 @@
+using System.Linq;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
 
@@ -15,5 +17,18 @@ public sealed partial class GuideLibraryView : Page
 
         // Load guides when page is fully loaded
         Loaded += async (s, e) => await ViewModel.LoadGuidesAsync();
+    }
+
+    private void GuideCard_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is int guideId)
+        {
+            System.Diagnostics.Debug.WriteLine($"GuideCard_Click: Guide ID {guideId}");
+            var guide = ViewModel.Guides.FirstOrDefault(g => g.Id == guideId);
+            if (guide != null)
+            {
+                ViewModel.NavigateToGuideCommand.Execute(guide);
+            }
+        }
     }
 }

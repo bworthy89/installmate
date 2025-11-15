@@ -87,8 +87,8 @@
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="vm:GuideListItem">
                             <Button
-                                Command="{Binding ElementName=RootPage, Path=ViewModel.NavigateToGuideCommand}"
-                                CommandParameter="{x:Bind}"
+                                Click="GuideCard_Click"
+                                Tag="{x:Bind Id}"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Stretch"
                                 Padding="0"
