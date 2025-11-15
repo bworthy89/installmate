@@ -132,7 +132,16 @@ public partial class GuideLibraryViewModel : ObservableObject
     [RelayCommand]
     private void NavigateToGuide(GuideListItem guide)
     {
-        _navigationService.NavigateToGuideDetail(guide.Id);
+        System.Diagnostics.Debug.WriteLine($"NavigateToGuide called for Guide ID: {guide.Id}, Title: {guide.Title}");
+        try
+        {
+            _navigationService.NavigateToGuideDetail(guide.Id);
+            System.Diagnostics.Debug.WriteLine("Navigation completed successfully");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Navigation failed: {ex.Message}");
+        }
     }
 
     [RelayCommand]

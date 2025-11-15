@@ -36,14 +36,18 @@ public class NavigationService : INavigationService
 
     public void NavigateTo(Type pageType, Dictionary<string, object>? parameters)
     {
+        System.Diagnostics.Debug.WriteLine($"NavigateTo called for page type: {pageType.Name}");
+
         if (_frame == null)
         {
+            System.Diagnostics.Debug.WriteLine("ERROR: Navigation frame is null!");
             throw new InvalidOperationException("Navigation frame is not set.");
         }
 
         // Store parameters for the page type
         if (parameters != null && parameters.Count > 0)
         {
+            System.Diagnostics.Debug.WriteLine($"Storing {parameters.Count} parameters");
             _navigationParameters[pageType] = parameters;
         }
         else if (_navigationParameters.ContainsKey(pageType))
@@ -57,8 +61,11 @@ public class NavigationService : INavigationService
 
         if (page == null)
         {
+            System.Diagnostics.Debug.WriteLine($"ERROR: Page {pageType.Name} not found in DI container!");
             throw new InvalidOperationException($"Page {pageType.Name} is not registered in the DI container.");
         }
+
+        System.Diagnostics.Debug.WriteLine($"Page instance created: {page.GetType().Name}");
 
         // If the page's DataContext has an Initialize method, call it with parameters
         if (page is FrameworkElement element && element.DataContext != null)
@@ -67,11 +74,13 @@ public class NavigationService : INavigationService
             var initializeMethod = dataContext.GetType().GetMethod("Initialize");
             if (initializeMethod != null && parameters != null)
             {
+                System.Diagnostics.Debug.WriteLine("Calling Initialize method on DataContext");
                 initializeMethod.Invoke(dataContext, new object[] { parameters });
             }
         }
 
         _frame.Content = page;
+        System.Diagnostics.Debug.WriteLine("Navigation complete - frame content set");
     }
 
     public void GoBack()
@@ -90,6 +99,7 @@ public class NavigationService : INavigationService
 
     public void NavigateToGuideDetail(int guideId)
     {
+        System.Diagnostics.Debug.WriteLine($"NavigateToGuideDetail called with GuideId: {guideId}");
         var parameters = new Dictionary<string, object>
         {
             { "GuideId", guideId }
