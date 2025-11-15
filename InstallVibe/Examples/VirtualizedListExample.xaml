@@ -193,11 +193,6 @@
                 <ItemsRepeater.Layout>
                     <StackLayout Spacing="8" />
                 </ItemsRepeater.Layout>
-
-                <!-- Animator for smooth item additions/removals -->
-                <ItemsRepeater.ItemTransitionProvider>
-                    <DefaultElementAnimator />
-                </ItemsRepeater.ItemTransitionProvider>
             </ItemsRepeater>
         </ScrollViewer>
 
