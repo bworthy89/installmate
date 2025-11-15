@@ -101,24 +101,45 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     {
         var currentPage = ContentFrame.Content?.GetType().Name;
 
+        // First, deselect all menu items
         foreach (var item in NavView.MenuItems)
         {
             if (item is NavigationViewItem navItem)
             {
-                var tag = navItem.Tag?.ToString();
-                navItem.IsSelected = tag switch
-                {
-                    "GuideLibrary" => currentPage == "GuideLibraryView",
-                    "AdminDashboard" => currentPage == "AdminDashboardView" ||
-                                       currentPage == "GuideEditorView" ||
-                                       currentPage == "StepEditorView",
-                    _ => false
-                };
+                navItem.IsSelected = false;
             }
         }
 
-        // Handle settings selection
-        NavView.SelectedItem = currentPage == "SettingsView" ? NavView.SettingsItem : NavView.SelectedItem;
+        // Then select the appropriate item based on current page
+        if (currentPage == "SettingsView")
+        {
+            NavView.SelectedItem = NavView.SettingsItem;
+        }
+        else
+        {
+            foreach (var item in NavView.MenuItems)
+            {
+                if (item is NavigationViewItem navItem)
+                {
+                    var tag = navItem.Tag?.ToString();
+                    var shouldSelect = tag switch
+                    {
+                        "GuideLibrary" => currentPage == "GuideLibraryView" || currentPage == "GuideDetailView",
+                        "AdminDashboard" => currentPage == "AdminDashboardView" ||
+                                           currentPage == "GuideEditorView" ||
+                                           currentPage == "StepEditorView",
+                        _ => false
+                    };
+
+                    if (shouldSelect)
+                    {
+                        navItem.IsSelected = true;
+                        NavView.SelectedItem = navItem;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
