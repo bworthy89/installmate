@@ -61,6 +61,9 @@ public partial class App : Application
         // Media Storage Service
         services.AddSingleton<IMediaStorageService, MediaStorageService>();
 
+        // Settings Service
+        services.AddSingleton<ISettingsService, SettingsService>();
+
         // Navigation Service
         services.AddSingleton<INavigationService, NavigationService>();
 
@@ -77,6 +80,9 @@ public partial class App : Application
         services.AddTransient<GuideEditorViewModel>();
         services.AddTransient<StepEditorViewModel>();
 
+        // Settings ViewModel
+        services.AddTransient<SettingsViewModel>();
+
         // Views
         services.AddTransient<LoginView>();
         services.AddTransient<HomeView>();
@@ -89,6 +95,9 @@ public partial class App : Application
         services.AddTransient<Views.Admin.AdminDashboardView>();
         services.AddTransient<Views.Admin.GuideEditorView>();
         services.AddTransient<Views.Admin.StepEditorView>();
+
+        // Settings View
+        services.AddTransient<SettingsView>();
 
         // Main Window
         services.AddSingleton<MainWindow>();

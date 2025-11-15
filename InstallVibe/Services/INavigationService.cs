@@ -28,4 +28,7 @@ public interface INavigationService
     void NavigateToAdminDashboard();
     void NavigateToGuideEditor(int? guideId = null);
     void NavigateToStepEditor(int stepId);
+
+    // Settings navigation
+    void NavigateToSettings();
 }

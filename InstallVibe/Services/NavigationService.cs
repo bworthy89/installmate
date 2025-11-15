@@ -139,4 +139,9 @@ public class NavigationService : INavigationService
         };
         NavigateTo<Views.Admin.StepEditorView>(parameters);
     }
+
+    public void NavigateToSettings()
+    {
+        NavigateTo<Views.SettingsView>();
+    }
 }

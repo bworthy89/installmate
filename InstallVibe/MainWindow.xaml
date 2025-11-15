@@ -8,6 +8,63 @@
     Title="InstallVibe">
 
     <Grid>
-        <Frame x:Name="ContentFrame" />
+        <NavigationView
+            x:Name="NavView"
+            IsBackButtonVisible="Auto"
+            IsBackEnabled="{x:Bind CanGoBack, Mode=OneWay}"
+            BackRequested="NavView_BackRequested"
+            ItemInvoked="NavView_ItemInvoked"
+            PaneDisplayMode="Left"
+            IsSettingsVisible="True"
+            Header="{x:Bind CurrentPageTitle, Mode=OneWay}">
+
+            <NavigationView.MenuItems>
+                <!-- Guide Library Section -->
+                <NavigationViewItem
+                    Content="Guide Library"
+                    Tag="GuideLibrary"
+                    Icon="Library">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8F1;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- In-Progress Section -->
+                <NavigationViewItem
+                    Content="In Progress"
+                    Tag="InProgress"
+                    Icon="Clock">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE916;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- Completed Section -->
+                <NavigationViewItem
+                    Content="Completed"
+                    Tag="Completed"
+                    Icon="Accept">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE73E;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItemSeparator />
+
+                <!-- Admin Tools Section (Visible only to admins) -->
+                <NavigationViewItem
+                    x:Name="AdminMenuItem"
+                    Content="Admin Tools"
+                    Tag="AdminDashboard"
+                    Visibility="Collapsed">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8EF;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <!-- Content Frame -->
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
     </Grid>
 </Window>

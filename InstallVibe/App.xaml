@@ -7,6 +7,11 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+
+                <!-- Brand Theme Resources -->
+                <ResourceDictionary Source="/Resources/Colors.xaml" />
+                <ResourceDictionary Source="/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/Resources/ControlStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Converters -->
@@ -14,7 +19,7 @@
             <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
             <converters:BoolToCompleteTextConverter x:Key="BoolToCompleteTextConverter" />
 
-            <!-- Button Styles -->
+            <!-- Legacy Button Styles (for compatibility) -->
             <Style x:Key="AccentButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                 <Setter Property="Foreground" Value="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
