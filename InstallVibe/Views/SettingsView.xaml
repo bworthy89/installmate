@@ -3,7 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:InstallVibe.ViewModels"
+    xmlns:converters="using:InstallVibe.Converters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <converters:EmptyStringToBoolConverter x:Key="EmptyStringToBoolConverter" />
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -18,7 +23,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Command="{x:Bind ViewModel.GoBackCommand}" Style="{StaticResource SubtleButtonStyle}" Margin="0,0,16,0">
+            <Button Grid.Column="0" Command="{x:Bind ViewModel.GoBackCommand}" Margin="0,0,16,0">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xE72B;" FontSize="16" />
                     <TextBlock Text="Back" />
@@ -40,14 +45,14 @@
 
                 <!-- Appearance Section -->
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Appearance" Style="{StaticResource SectionHeaderStyle}" />
+                    <TextBlock Text="Appearance" FontSize="20" FontWeight="SemiBold" />
 
-                    <Border Style="{StaticResource FlatCardStyle}">
+                    <Border Style="{StaticResource ElevatedCardStyle}">
                         <StackPanel Spacing="20">
                             <!-- Theme Selection -->
                             <StackPanel Spacing="8">
                                 <TextBlock Text="App Theme" FontWeight="SemiBold" />
-                                <TextBlock Text="Choose how InstallVibe looks" Style="{StaticResource CaptionTextStyle}" />
+                                <TextBlock Text="Choose how InstallVibe looks" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                 <ComboBox
                                     SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
                                     HorizontalAlignment="Stretch"
@@ -63,7 +68,7 @@
                             <!-- Font Size Selection -->
                             <StackPanel Spacing="8">
                                 <TextBlock Text="Font Size" FontWeight="SemiBold" />
-                                <TextBlock Text="Adjust text size for better readability" Style="{StaticResource CaptionTextStyle}" />
+                                <TextBlock Text="Adjust text size for better readability" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                 <ComboBox
                                     SelectedIndex="{x:Bind ViewModel.SelectedFontSizeIndex, Mode=TwoWay}"
                                     HorizontalAlignment="Stretch"
@@ -79,9 +84,9 @@
 
                 <!-- Privacy Section -->
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Privacy" Style="{StaticResource SectionHeaderStyle}" />
+                    <TextBlock Text="Privacy" FontSize="20" FontWeight="SemiBold" />
 
-                    <Border Style="{StaticResource FlatCardStyle}">
+                    <Border Style="{StaticResource ElevatedCardStyle}">
                         <StackPanel Spacing="12">
                             <StackPanel Spacing="4">
                                 <ToggleSwitch
@@ -92,7 +97,7 @@
                                 <TextBlock
                                     Text="Help improve InstallVibe by sending anonymous usage data and crash reports"
                                     TextWrapping="Wrap"
-                                    Style="{StaticResource CaptionTextStyle}"
+                                    FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                     Margin="0,0,0,0" />
                             </StackPanel>
                         </StackPanel>
@@ -101,13 +106,13 @@
 
                 <!-- Data Management Section -->
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Data Management" Style="{StaticResource SectionHeaderStyle}" />
+                    <TextBlock Text="Data Management" FontSize="20" FontWeight="SemiBold" />
 
-                    <Border Style="{StaticResource FlatCardStyle}">
+                    <Border Style="{StaticResource ElevatedCardStyle}">
                         <StackPanel Spacing="16">
                             <StackPanel Spacing="8">
                                 <TextBlock Text="Clear All Data" FontWeight="SemiBold" />
-                                <TextBlock TextWrapping="Wrap" Style="{StaticResource CaptionTextStyle}">
+                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
                                     This will delete all guides, user progress, and reset the application to its initial state. This action cannot be undone.
                                 </TextBlock>
                             </StackPanel>
@@ -124,9 +129,9 @@
 
                 <!-- About Section -->
                 <StackPanel Spacing="16">
-                    <TextBlock Text="About" Style="{StaticResource SectionHeaderStyle}" />
+                    <TextBlock Text="About" FontSize="20" FontWeight="SemiBold" />
 
-                    <Border Style="{StaticResource FlatCardStyle}">
+                    <Border Style="{StaticResource ElevatedCardStyle}">
                         <StackPanel Spacing="16">
                             <!-- App Name and Logo -->
                             <StackPanel Spacing="8" HorizontalAlignment="Center">
@@ -150,7 +155,7 @@
                             <!-- Copyright -->
                             <TextBlock
                                 Text="© 2025 InstallVibe. All rights reserved."
-                                Style="{StaticResource CaptionTextStyle}"
+                                FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 HorizontalAlignment="Center" />
                         </StackPanel>
                     </Border>
