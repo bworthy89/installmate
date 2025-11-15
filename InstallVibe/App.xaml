@@ -8,10 +8,16 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
-                <!-- Brand Theme Resources -->
+                <!-- Core Design System Resources -->
                 <ResourceDictionary Source="/Resources/Colors.xaml" />
+                <ResourceDictionary Source="/Resources/Theme.xaml" />
+                <ResourceDictionary Source="/Resources/Typography.xaml" />
                 <ResourceDictionary Source="/Resources/Styles.xaml" />
                 <ResourceDictionary Source="/Resources/ControlStyles.xaml" />
+
+                <!-- Accessibility & Interaction Resources -->
+                <ResourceDictionary Source="/Resources/AccessibleStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Animations.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Converters -->

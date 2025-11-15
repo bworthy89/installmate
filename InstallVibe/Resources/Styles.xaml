@@ -2,91 +2,161 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Typography Styles -->
-    <Style x:Key="DisplayTextStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeDisplay}" />
-        <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="LineHeight" Value="40" />
-    </Style>
+    <!--
+        Styles.xaml - Comprehensive UI control styles
+        Provides consistent styling for buttons, inputs, cards, and other controls
+    -->
 
-    <Style x:Key="HeadingTextStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeHeading}" />
+    <!-- Button Styles -->
+
+    <!-- Primary Button (filled with brand color) -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+        <Setter Property="MinWidth" Value="{StaticResource MinButtonWidth}" />
+        <Setter Property="MinHeight" Value="{StaticResource MinButtonHeight}" />
+        <Setter Property="Padding" Value="24,12" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="LineHeight" Value="32" />
     </Style>
 
-    <Style x:Key="TitleTextStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+    <!-- Secondary Button (outlined) -->
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="{StaticResource MinButtonWidth}" />
+        <Setter Property="MinHeight" Value="{StaticResource MinButtonHeight}" />
+        <Setter Property="Padding" Value="24,12" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrandPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Foreground" Value="{StaticResource BrandPrimaryBrush}" />
         <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="LineHeight" Value="28" />
     </Style>
 
-    <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeSubtitle}" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="LineHeight" Value="24" />
+    <!-- Ghost Button (text only, no background) -->
+    <Style x:Key="GhostButtonStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="{StaticResource MinButtonWidth}" />
+        <Setter Property="MinHeight" Value="{StaticResource MinButtonHeight}" />
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{StaticResource BrandPrimaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
     </Style>
 
-    <Style x:Key="BodyTextStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="LineHeight" Value="20" />
+    <!-- Icon Button (square, centered icon) -->
+    <Style x:Key="IconButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="{StaticResource MinTouchTargetSize}" />
+        <Setter Property="Height" Value="{StaticResource MinTouchTargetSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
-    <Style x:Key="CaptionTextStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="LineHeight" Value="16" />
-        <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+    <!-- Danger Button (for destructive actions) -->
+    <Style x:Key="DangerButtonStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="{StaticResource MinButtonWidth}" />
+        <Setter Property="MinHeight" Value="{StaticResource MinButtonHeight}" />
+        <Setter Property="Padding" Value="24,12" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
+        <Setter Property="Background" Value="{StaticResource BrandErrorBrush}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!-- Input Control Styles -->
+
+    <!-- TextBox Style -->
+    <Style x:Key="RoundedTextBoxStyle" TargetType="TextBox">
+        <Setter Property="MinHeight" Value="{StaticResource MinTouchTargetSize}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush}" />
+        <Setter Property="PlaceholderForeground" Value="{ThemeResource TextSecondaryBrush}" />
+    </Style>
+
+    <!-- Multi-line TextBox -->
+    <Style x:Key="MultilineTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource RoundedTextBoxStyle}">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="MinHeight" Value="120" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+    </Style>
+
+    <!-- ComboBox Style -->
+    <Style x:Key="RoundedComboBoxStyle" TargetType="ComboBox">
+        <Setter Property="MinHeight" Value="{StaticResource MinTouchTargetSize}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
+
+    <!-- ProgressBar Style -->
+    <Style x:Key="RoundedProgressBarStyle" TargetType="ProgressBar">
+        <Setter Property="Height" Value="8" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Foreground" Value="{StaticResource BrandPrimaryBrush}" />
+        <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
     </Style>
 
     <!-- Card Styles -->
+
     <Style x:Key="ElevatedCardStyle" TargetType="Border">
-        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
-        <Setter Property="Padding" Value="{StaticResource SpacingMedium}" />
+        <Setter Property="Padding" Value="{StaticResource CardPadding}" />
         <Setter Property="Shadow">
             <Setter.Value>
                 <ThemeShadow />
             </Setter.Value>
         </Setter>
+        <Setter Property="Translation" Value="0,0,4" />
     </Style>
 
     <Style x:Key="FlatCardStyle" TargetType="Border">
-        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
-        <Setter Property="Padding" Value="{StaticResource SpacingMedium}" />
+        <Setter Property="Padding" Value="{StaticResource CardPadding}" />
     </Style>
 
-    <!-- Section Header Style -->
-    <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Margin" Value="0,0,0,12" />
+    <Style x:Key="InteractiveCardStyle" TargetType="Border" BasedOn="{StaticResource ElevatedCardStyle}">
+        <Setter Property="Cursor" Value="Hand" />
     </Style>
 
-    <!-- Icon Button Style -->
-    <Style x:Key="IconButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Padding" Value="8" />
+    <!-- NavigationViewItem Style -->
+    <Style x:Key="CompactNavigationViewItemStyle" TargetType="NavigationViewItem">
+        <Setter Property="MinHeight" Value="{StaticResource MinTouchTargetSize}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
-        <Setter Property="MinWidth" Value="44" />
-        <Setter Property="MinHeight" Value="44" />
     </Style>
 
-    <!-- Accent Card Style -->
-    <Style x:Key="AccentCardStyle" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMedium}" />
-        <Setter Property="Padding" Value="{StaticResource SpacingLarge}" />
+    <!-- ListViewItem Style -->
+    <Style x:Key="InteractiveListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="MinHeight" Value="{StaticResource MinTouchTargetSize}" />
+        <Setter Property="Padding" Value="{StaticResource ListItemPadding}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+        <Setter Property="Margin" Value="0,2" />
     </Style>
 
-    <!-- Badge Style -->
+    <!-- Dialog / ContentDialog Style -->
+    <Style x:Key="ModernContentDialogStyle" TargetType="ContentDialog">
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLarge}" />
+        <Setter Property="PrimaryButtonStyle" Value="{StaticResource PrimaryButtonStyle}" />
+        <Setter Property="SecondaryButtonStyle" Value="{StaticResource SecondaryButtonStyle}" />
+        <Setter Property="CloseButtonStyle" Value="{StaticResource GhostButtonStyle}" />
+    </Style>
+
+    <!-- Badge Styles -->
+
     <Style x:Key="BadgeStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLarge}" />
@@ -95,34 +165,75 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
-    <!-- Success Badge -->
-    <Style x:Key="SuccessBadgeStyle" TargetType="Border">
+    <Style x:Key="SuccessBadgeStyle" TargetType="Border" BasedOn="{StaticResource BadgeStyle}">
         <Setter Property="Background" Value="{StaticResource BrandSuccessBrush}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLarge}" />
-        <Setter Property="Padding" Value="12,4" />
     </Style>
 
-    <!-- Warning Badge -->
-    <Style x:Key="WarningBadgeStyle" TargetType="Border">
+    <Style x:Key="WarningBadgeStyle" TargetType="Border" BasedOn="{StaticResource BadgeStyle}">
         <Setter Property="Background" Value="{StaticResource BrandWarningBrush}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLarge}" />
-        <Setter Property="Padding" Value="12,4" />
     </Style>
 
-    <!-- Error Badge -->
-    <Style x:Key="ErrorBadgeStyle" TargetType="Border">
+    <Style x:Key="ErrorBadgeStyle" TargetType="Border" BasedOn="{StaticResource BadgeStyle}">
         <Setter Property="Background" Value="{StaticResource BrandErrorBrush}" />
-        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusLarge}" />
-        <Setter Property="Padding" Value="12,4" />
     </Style>
 
-    <!-- List Item Style -->
-    <Style x:Key="ListItemStyle" TargetType="Border">
-        <Setter Property="Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+    <!-- List and Item Styles -->
+
+    <Style x:Key="ListItemContainerStyle" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="0,0,0,1" />
-        <Setter Property="Padding" Value="{StaticResource SpacingMedium}" />
-        <Setter Property="MinHeight" Value="64" />
+        <Setter Property="Padding" Value="{StaticResource ListItemPadding}" />
+        <Setter Property="MinHeight" Value="{StaticResource MinTouchTargetSize}" />
+    </Style>
+
+    <Style x:Key="SelectableListItemStyle" TargetType="Border" BasedOn="{StaticResource ListItemContainerStyle}">
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+        <Setter Property="Margin" Value="0,2" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <!-- Divider Style -->
+    <Style x:Key="HorizontalDividerStyle" TargetType="Border">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Background" Value="{ThemeResource DividerBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="0,8" />
+    </Style>
+
+    <Style x:Key="VerticalDividerStyle" TargetType="Border">
+        <Setter Property="Width" Value="1" />
+        <Setter Property="Background" Value="{ThemeResource DividerBrush}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="8,0" />
+    </Style>
+
+    <!-- Section Header Style -->
+    <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+        <Setter Property="AutomationProperties.HeadingLevel" Value="Level2" />
+    </Style>
+
+    <!-- Toggle Switch Style -->
+    <Style x:Key="ModernToggleSwitchStyle" TargetType="ToggleSwitch">
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="{StaticResource MinTouchTargetSize}" />
+    </Style>
+
+    <!-- Checkbox Style -->
+    <Style x:Key="ModernCheckBoxStyle" TargetType="CheckBox">
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="{StaticResource MinTouchTargetSize}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+    </Style>
+
+    <!-- RadioButton Style -->
+    <Style x:Key="ModernRadioButtonStyle" TargetType="RadioButton">
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="{StaticResource MinTouchTargetSize}" />
     </Style>
 
 </ResourceDictionary>

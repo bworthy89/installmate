@@ -1,0 +1,296 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Animations.xaml - Storyboards and animations for micro-interactions
+        Provides smooth transitions and feedback for user actions
+    -->
+
+    <!-- Step Completion Animation -->
+    <!-- Scales up and fades in a checkmark icon when a step is marked complete -->
+    <Storyboard x:Key="StepCompletionAnimation">
+        <!-- Scale from 0 to 1 with bounce effect -->
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)">
+            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1.2">
+                <EasingDoubleKeyFrame.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                </EasingDoubleKeyFrame.EasingFunction>
+            </EasingDoubleKeyFrame>
+            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
+                <EasingDoubleKeyFrame.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut" />
+                </EasingDoubleKeyFrame.EasingFunction>
+            </EasingDoubleKeyFrame>
+        </DoubleAnimationUsingKeyFrames>
+
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)">
+            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1.2">
+                <EasingDoubleKeyFrame.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                </EasingDoubleKeyFrame.EasingFunction>
+            </EasingDoubleKeyFrame>
+            <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
+                <EasingDoubleKeyFrame.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut" />
+                </EasingDoubleKeyFrame.EasingFunction>
+            </EasingDoubleKeyFrame>
+        </DoubleAnimationUsingKeyFrames>
+
+        <!-- Fade in opacity -->
+        <DoubleAnimation
+            Storyboard.TargetProperty="Opacity"
+            From="0"
+            To="1"
+            Duration="0:0:0.3">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+
+        <!-- Color transition to success green -->
+        <ColorAnimation
+            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+            To="#0F9D58"
+            Duration="0:0:0.4">
+            <ColorAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseInOut" />
+            </ColorAnimation.EasingFunction>
+        </ColorAnimation>
+    </Storyboard>
+
+    <!-- Page Fade In Animation -->
+    <!-- Fades in new page content smoothly -->
+    <Storyboard x:Key="PageFadeInAnimation">
+        <DoubleAnimation
+            Storyboard.TargetProperty="Opacity"
+            From="0"
+            To="1"
+            Duration="0:0:0.25">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Page Slide and Fade In Animation -->
+    <!-- Slides in from right with fade (for forward navigation) -->
+    <Storyboard x:Key="PageSlideInFromRightAnimation">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+            From="50"
+            To="0"
+            Duration="0:0:0.3">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+
+        <DoubleAnimation
+            Storyboard.TargetProperty="Opacity"
+            From="0"
+            To="1"
+            Duration="0:0:0.3">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Page Slide and Fade In Animation (Back navigation) -->
+    <!-- Slides in from left with fade (for back navigation) -->
+    <Storyboard x:Key="PageSlideInFromLeftAnimation">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+            From="-50"
+            To="0"
+            Duration="0:0:0.3">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+
+        <DoubleAnimation
+            Storyboard.TargetProperty="Opacity"
+            From="0"
+            To="1"
+            Duration="0:0:0.3">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Button Press Animation (Ripple Effect Simplified) -->
+    <!-- Scales down slightly on press, scales back on release -->
+    <Storyboard x:Key="ButtonPressAnimation">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+            To="0.95"
+            Duration="0:0:0.1">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+            To="0.95"
+            Duration="0:0:0.1">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <Storyboard x:Key="ButtonReleaseAnimation">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+            To="1.0"
+            Duration="0:0:0.15">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+            To="1.0"
+            Duration="0:0:0.15">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Card Hover Animation -->
+    <!-- Slightly lifts card on hover with shadow increase -->
+    <Storyboard x:Key="CardHoverAnimation">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+            To="-2"
+            Duration="0:0:0.2">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetZ)"
+            To="4"
+            Duration="0:0:0.2">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <Storyboard x:Key="CardHoverExitAnimation">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+            To="0"
+            Duration="0:0:0.2">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.LocalOffsetZ)"
+            To="0"
+            Duration="0:0:0.2">
+            <DoubleAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Loading Spinner Animation -->
+    <!-- Continuous rotation for progress indicators -->
+    <Storyboard x:Key="LoadingSpinnerAnimation" RepeatBehavior="Forever">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+            From="0"
+            To="360"
+            Duration="0:0:1.5">
+            <DoubleAnimation.EasingFunction>
+                <LinearEase />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Success Flash Animation -->
+    <!-- Brief green flash for successful operations -->
+    <Storyboard x:Key="SuccessFlashAnimation">
+        <ColorAnimation
+            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+            To="#E8F5E9"
+            Duration="0:0:0.15">
+            <ColorAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseOut" />
+            </ColorAnimation.EasingFunction>
+        </ColorAnimation>
+
+        <ColorAnimation
+            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+            BeginTime="0:0:0.15"
+            To="Transparent"
+            Duration="0:0:0.5">
+            <ColorAnimation.EasingFunction>
+                <CubicEase EasingMode="EaseIn" />
+            </ColorAnimation.EasingFunction>
+        </ColorAnimation>
+    </Storyboard>
+
+    <!--
+        USAGE EXAMPLES:
+
+        1. Step completion with animation trigger in XAML:
+        <Border x:Name="StepCheckmarkBorder"
+                RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <ScaleTransform />
+            </Border.RenderTransform>
+            <FontIcon Glyph="&#xE73E;" />
+        </Border>
+
+        Code-behind or Behavior:
+        Storyboard sb = (Storyboard)Resources["StepCompletionAnimation"];
+        Storyboard.SetTarget(sb, StepCheckmarkBorder);
+        sb.Begin();
+
+        2. Page transition in ViewModel Command:
+        public async Task NavigateToNextStep()
+        {
+            // Trigger animation via Messenger or direct reference
+            await AnimationHelper.PlayPageTransitionAsync(PageSlideInFromRightAnimation);
+            _navigationService.NavigateToStepViewer(nextStepId);
+        }
+
+        3. Apply page animation in code-behind:
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            var sb = (Storyboard)Resources["PageFadeInAnimation"];
+            Storyboard.SetTarget(sb, this);
+            sb.Begin();
+        }
+
+        4. Button with press animation:
+        <Button PointerPressed="OnButtonPressed" PointerReleased="OnButtonReleased">
+            <Button.RenderTransform>
+                <ScaleTransform />
+            </Button.RenderTransform>
+        </Button>
+
+        private void OnButtonPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var sb = (Storyboard)Resources["ButtonPressAnimation"];
+            Storyboard.SetTarget(sb, sender as UIElement);
+            sb.Begin();
+        }
+    -->
+
+</ResourceDictionary>

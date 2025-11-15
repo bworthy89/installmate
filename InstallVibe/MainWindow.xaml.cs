@@ -58,6 +58,9 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
         // Set admin visibility
         UpdateAdminVisibility();
 
+        // Register keyboard accelerators
+        RegisterKeyboardShortcuts();
+
         // Set window size
         AppWindow.Resize(new Windows.Graphics.SizeInt32(1200, 800));
 
@@ -225,5 +228,108 @@ public sealed partial class MainWindow : Window, INotifyPropertyChanged
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Registers keyboard shortcuts for improved accessibility and power-user workflows
+    /// </summary>
+    private void RegisterKeyboardShortcuts()
+    {
+        // Alt+Left: Go Back
+        var goBackAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
+        {
+            Key = Windows.System.VirtualKey.Left,
+            Modifiers = Windows.System.VirtualKeyModifiers.Menu // Alt key
+        };
+        goBackAccelerator.Invoked += (sender, args) =>
+        {
+            if (CanGoBack)
+            {
+                _navigationService.GoBack();
+                args.Handled = true;
+            }
+        };
+        KeyboardAccelerators.Add(goBackAccelerator);
+
+        // Alt+Home: Navigate to Home/Guide Library
+        var goHomeAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
+        {
+            Key = Windows.System.VirtualKey.Home,
+            Modifiers = Windows.System.VirtualKeyModifiers.Menu
+        };
+        goHomeAccelerator.Invoked += (sender, args) =>
+        {
+            _navigationService.NavigateToGuideLibrary();
+            args.Handled = true;
+        };
+        KeyboardAccelerators.Add(goHomeAccelerator);
+
+        // Ctrl+Comma: Open Settings
+        var settingsAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
+        {
+            Key = Windows.System.VirtualKey.Comma,
+            Modifiers = Windows.System.VirtualKeyModifiers.Control
+        };
+        settingsAccelerator.Invoked += (sender, args) =>
+        {
+            _navigationService.NavigateToSettings();
+            args.Handled = true;
+        };
+        KeyboardAccelerators.Add(settingsAccelerator);
+
+        // F1: Help (future implementation)
+        var helpAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
+        {
+            Key = Windows.System.VirtualKey.F1
+        };
+        helpAccelerator.Invoked += (sender, args) =>
+        {
+            // TODO: Navigate to help documentation
+            System.Diagnostics.Debug.WriteLine("F1 - Help requested");
+            args.Handled = true;
+        };
+        KeyboardAccelerators.Add(helpAccelerator);
+
+        // Ctrl+F: Search (future implementation)
+        var searchAccelerator = new Microsoft.UI.Xaml.Input.KeyboardAccelerator
+        {
+            Key = Windows.System.VirtualKey.F,
+            Modifiers = Windows.System.VirtualKeyModifiers.Control
+        };
+        searchAccelerator.Invoked += (sender, args) =>
+        {
+            // TODO: Focus search box
+            System.Diagnostics.Debug.WriteLine("Ctrl+F - Search requested");
+            args.Handled = true;
+        };
+        KeyboardAccelerators.Add(searchAccelerator);
+
+        /*
+         * KEYBOARD SHORTCUTS REFERENCE:
+         *
+         * Global Navigation:
+         * - Alt+Left Arrow: Go back to previous page
+         * - Alt+Home: Navigate to Guide Library (home)
+         * - Ctrl+Comma: Open Settings
+         * - F1: Help documentation (future)
+         * - Ctrl+F: Search guides (future)
+         *
+         * Step Viewer (context-specific, implemented in StepViewerView):
+         * - Left Arrow: Previous step
+         * - Right Arrow: Next step
+         * - Space: Toggle step completion
+         * - Escape: Exit guide viewer
+         *
+         * List Navigation (context-specific):
+         * - Up/Down Arrow: Navigate through items
+         * - Enter: Open/activate selected item
+         * - Delete: Delete selected item (admin only)
+         *
+         * General:
+         * - Tab: Navigate forward through interactive elements
+         * - Shift+Tab: Navigate backward through interactive elements
+         * - Escape: Close dialog or cancel operation
+         * - Enter: Confirm dialog or submit form
+         */
     }
 }

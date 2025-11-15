@@ -1,0 +1,139 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Typography.xaml - Text styles and spacing tokens for consistent typography
+        All styles use semantic theme-aware brushes for automatic Light/Dark switching
+    -->
+
+    <!-- Text Styles -->
+
+    <!-- Display - Largest text for hero sections -->
+    <Style x:Key="DisplayTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeDisplay}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="40" />
+        <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
+    </Style>
+
+    <!-- Heading - Page titles and major sections -->
+    <Style x:Key="HeadingTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeHeading}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="32" />
+        <Setter Property="AutomationProperties.HeadingLevel" Value="Level2" />
+    </Style>
+
+    <!-- Title Large - Card titles, dialog headers -->
+    <Style x:Key="TitleLargeTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="28" />
+        <Setter Property="AutomationProperties.HeadingLevel" Value="Level3" />
+    </Style>
+
+    <!-- Title Medium - Section headers -->
+    <Style x:Key="TitleMediumTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="26" />
+    </Style>
+
+    <!-- Subtitle - Subheadings and emphasis -->
+    <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSubtitle}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="24" />
+    </Style>
+
+    <!-- Body - Default text for content -->
+    <Style x:Key="BodyTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- Body Secondary - Less important content -->
+    <Style x:Key="BodySecondaryTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{ThemeResource TextSecondaryBrush}" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- Caption - Small labels, hints, metadata -->
+    <Style x:Key="CaptionTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{ThemeResource TextSecondaryBrush}" />
+        <Setter Property="LineHeight" Value="16" />
+    </Style>
+
+    <!-- Monospace Small - Code snippets, IDs -->
+    <Style x:Key="MonospaceSmallTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
+        <Setter Property="FontFamily" Value="Consolas, Courier New" />
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+        <Setter Property="Background" Value="{ThemeResource SurfaceBrush}" />
+        <Setter Property="Padding" Value="4,2" />
+    </Style>
+
+    <!-- Error Text - Validation messages -->
+    <Style x:Key="ErrorTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{StaticResource BrandErrorBrush}" />
+        <Setter Property="AutomationProperties.LiveSetting" Value="Assertive" />
+    </Style>
+
+    <!-- Success Text - Confirmation messages -->
+    <Style x:Key="SuccessTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{StaticResource BrandSuccessBrush}" />
+        <Setter Property="AutomationProperties.LiveSetting" Value="Polite" />
+    </Style>
+
+    <!-- Layout Spacing Constants -->
+    <!-- Use these for consistent margins and padding -->
+
+    <!-- Vertical Spacing -->
+    <Thickness x:Key="VerticalSpacingXSmall">0,4,0,0</Thickness>
+    <Thickness x:Key="VerticalSpacingSmall">0,8,0,0</Thickness>
+    <Thickness x:Key="VerticalSpacingMedium">0,16,0,0</Thickness>
+    <Thickness x:Key="VerticalSpacingLarge">0,24,0,0</Thickness>
+    <Thickness x:Key="VerticalSpacingXLarge">0,32,0,0</Thickness>
+
+    <!-- Horizontal Spacing -->
+    <Thickness x:Key="HorizontalSpacingXSmall">4,0,0,0</Thickness>
+    <Thickness x:Key="HorizontalSpacingSmall">8,0,0,0</Thickness>
+    <Thickness x:Key="HorizontalSpacingMedium">16,0,0,0</Thickness>
+    <Thickness x:Key="HorizontalSpacingLarge">24,0,0,0</Thickness>
+
+    <!-- All-sides Padding -->
+    <Thickness x:Key="PaddingXSmall">4</Thickness>
+    <Thickness x:Key="PaddingSmall">8</Thickness>
+    <Thickness x:Key="PaddingMedium">16</Thickness>
+    <Thickness x:Key="PaddingLarge">24</Thickness>
+    <Thickness x:Key="PaddingXLarge">32</Thickness>
+
+    <!-- Card/Container Padding -->
+    <Thickness x:Key="CardPadding">16,12</Thickness>
+    <Thickness x:Key="CardPaddingLarge">24,16</Thickness>
+    <Thickness x:Key="ListItemPadding">12,8</Thickness>
+
+    <!-- Button Minimum Sizes (for touch targets ≥ 44x44) -->
+    <x:Double x:Key="MinTouchTargetSize">44</x:Double>
+    <x:Double x:Key="MinButtonWidth">88</x:Double>
+    <x:Double x:Key="MinButtonHeight">44</x:Double>
+
+</ResourceDictionary>
