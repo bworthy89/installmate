@@ -32,6 +32,8 @@ public partial class GuideLibraryViewModel : ObservableObject
     [ObservableProperty]
     private bool _isLoading = false;
 
+    public bool IsAdmin => _authService.IsAdmin();
+
     public GuideLibraryViewModel(INavigationService navigationService, IAuthService authService)
     {
         _navigationService = navigationService;
@@ -141,6 +143,21 @@ public partial class GuideLibraryViewModel : ObservableObject
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Navigation failed: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private void EditGuide(GuideListItem guide)
+    {
+        System.Diagnostics.Debug.WriteLine($"EditGuide called for Guide ID: {guide.Id}, Title: {guide.Title}");
+        try
+        {
+            _navigationService.NavigateToGuideEditor(guide.Id);
+            System.Diagnostics.Debug.WriteLine("Navigation to editor completed successfully");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Navigation to editor failed: {ex.Message}");
         }
     }
 

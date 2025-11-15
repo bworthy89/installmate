@@ -86,17 +86,13 @@
                 <ItemsRepeater ItemsSource="{x:Bind ViewModel.Guides, Mode=OneWay}">
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="vm:GuideListItem">
-                            <Button
-                                Click="GuideCard_Click"
-                                Tag="{x:Bind Id}"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                Padding="0"
-                                Margin="0,0,0,12"
+                            <Border
                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                CornerRadius="8">
+                                CornerRadius="8"
+                                Margin="0,0,0,12">
                                 <Grid Padding="20">
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
@@ -159,8 +155,35 @@
                                         Maximum="100"
                                         Margin="0,12,0,0"
                                         Height="4" />
+
+                                    <!-- Action Buttons -->
+                                    <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8" Margin="0,16,0,0">
+                                        <!-- Edit Button (Admin Only) -->
+                                        <Button
+                                            Click="EditGuideButton_Click"
+                                            Tag="{x:Bind Id}"
+                                            Visibility="{x:Bind RootPage.ViewModel.IsAdmin}"
+                                            Style="{StaticResource AccentButtonStyle}"
+                                            Padding="16,8">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE70F;" FontSize="16" />
+                                                <TextBlock Text="Edit" />
+                                            </StackPanel>
+                                        </Button>
+
+                                        <!-- View/Start Button -->
+                                        <Button
+                                            Click="GuideCard_Click"
+                                            Tag="{x:Bind Id}"
+                                            Padding="16,8">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE8A7;" FontSize="16" />
+                                                <TextBlock Text="View" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
                                 </Grid>
-                            </Button>
+                            </Border>
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>

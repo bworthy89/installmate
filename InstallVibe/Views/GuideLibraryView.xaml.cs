@@ -32,4 +32,17 @@ public sealed partial class GuideLibraryView : Page
             }
         }
     }
+
+    private void EditGuideButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is int guideId)
+        {
+            System.Diagnostics.Debug.WriteLine($"EditGuideButton_Click: Guide ID {guideId}");
+            var guide = ViewModel.Guides.FirstOrDefault(g => g.Id == guideId);
+            if (guide != null)
+            {
+                ViewModel.EditGuideCommand.Execute(guide);
+            }
+        }
+    }
 }
