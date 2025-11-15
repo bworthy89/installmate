@@ -67,6 +67,13 @@ public partial class App : Application
         // Navigation Service
         services.AddSingleton<INavigationService, NavigationService>();
 
+        // Update Services (Step 9)
+        services.AddSingleton<INetworkService, NetworkService>();
+        services.AddSingleton<IUpdateService, UpdateService>();
+
+        // Feedback Service (Step 10)
+        services.AddSingleton<IFeedbackService, FeedbackService>();
+
         // ViewModels
         services.AddTransient<LoginViewModel>();
         services.AddTransient<HomeViewModel>();
@@ -83,6 +90,13 @@ public partial class App : Application
         // Settings ViewModel
         services.AddTransient<SettingsViewModel>();
 
+        // Update ViewModel (Step 9)
+        services.AddTransient<UpdateViewModel>();
+
+        // Step 10 ViewModels
+        services.AddTransient<FeedbackViewModel>();
+        services.AddTransient<DiagnosticsViewModel>();
+
         // Views
         services.AddTransient<LoginView>();
         services.AddTransient<HomeView>();
@@ -98,6 +112,9 @@ public partial class App : Application
 
         // Settings View
         services.AddTransient<SettingsView>();
+
+        // Step 10 Views
+        services.AddTransient<DiagnosticsView>();
 
         // Main Window
         services.AddSingleton<MainWindow>();

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
 
@@ -10,6 +11,6 @@ public sealed partial class DiagnosticsView : Page
     public DiagnosticsView()
     {
         this.InitializeComponent();
-        ViewModel = App.GetService<DiagnosticsViewModel>();
+        ViewModel = App.Services.GetRequiredService<DiagnosticsViewModel>();
     }
 }

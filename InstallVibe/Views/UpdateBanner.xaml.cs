@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using InstallVibe.ViewModels;
 
@@ -11,8 +12,8 @@ namespace InstallVibe.Views
         {
             this.InitializeComponent();
 
-            // In production, inject via DI
-            ViewModel = App.GetService<UpdateViewModel>();
+            // Inject via DI
+            ViewModel = App.Services.GetRequiredService<UpdateViewModel>();
         }
 
         /// <summary>
